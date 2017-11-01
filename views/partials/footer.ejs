@@ -1,0 +1,67 @@
+<footer>
+<div class="card" style="background-color: <%- getConfig('COLOR_PRIMARY') %>">
+<div class="row st-menu-line" style="padding-left:50px;">
+          <div class="card-action">
+              <div class="row st-bold">
+			<div class="col-sm-3">
+                <h5 class="st-text-white st-bold"><%- getConfig('NAME') %></h5>
+				<ul class="list-unstyled">
+                    <li>
+                        <a style="color: white;" href="/"><%- translate('HEADER_BUTTON_FOR_BUYERS') %></a>
+                    </li>
+                    <li>
+                        <a style="color: white;" href="/taskers"><%- translate('HEADER_BUTTON_FOR_SELLERS') %></a>
+                    </li>
+                    <li>
+                        <a style="color: white;" href="/app/privacy"><%- translate('HOMEPAGE_FOOTER_PRIVACY') %></a>
+                    </li>
+					<li>
+                        <a style="color: white;" href="/app/terms"><%- translate('HOMEPAGE_FOOTER_TERMS') %></a>
+                    </li>
+                    <li>
+                        <a style="color: white;" href="/app/imprint"><%- translate('HOMEPAGE_FOOTER_IMPRINT') %></a>
+                    </li>
+                    <% if(getConfig('CUSTOM_CONTACT_PAGE_URL')) { %>
+                    <li>
+                        <a style="color: white;" href="<%- getConfig('CUSTOM_CONTACT_PAGE_URL') %>"><%- translate('HOMEPAGE_FOOTER_CONTACT') || 'Contact' %></a>
+                    </li>
+                    <% } %>
+                    <% if(getConfig('CUSTOM_BLOG_PAGE_URL')) { %>
+                    <li>
+                        <a style="color: white;" href="<%- getConfig('CUSTOM_BLOG_PAGE_URL') %>"><%- translate('HOMEPAGE_FOOTER_BLOG') || 'Blog' %></a>
+                    </li>
+                    <% } %>
+                </ul>	
+			</div>
+            <div class="col-sm-3 hidden">
+                <h5 class="st-text-white st-bold"><%- translate('DISCOVER') %></h5>
+				<ul style="color: white;" class="list-unstyled">
+                    <li><a href="/"><%- translate('BUTTON_CLIENTS') %></a></li> 
+                    <li><a href="/freelancers"><%- translate('BUTTON_FREELANCERS') %></a></li>  
+                    <li><a href="/app"><%- translate('BROWSE_LISTINGS') %></a></li> 
+                    <li><a href="/app/new-listing"><%- translate('OFFER_LISTINGS') %></a></li>               
+                    <li><a href="/blog"><%- translate('BLOG') %></a></li>
+				</ul>
+			</div>
+              <div class="col-sm-3" style="height:100%">
+                <h5 class="st-text-white st-bold"><%- translate('HOMEPAGE_FOOTER_CATEGORIES') %></h5>
+				<ul class="list-unstyled" style="color: white;">
+                     <% categories.forEach(category => { %>
+                        <li>
+                            <a style="color: white;" href="/app/new-listing">
+                                <%- category.label %>
+                            </a>
+                        </li>
+                     <% }); %>
+                </ul>	
+			</div>
+             <div class="col-sm-3">
+                 <h5 class="st-text-white st-bold"><%- translate('HOMEPAGE_FOOTER_SOCIAL_MEDIA') %></h5>
+                 <a style="color:white"  href="https://www.facebook.com/<%- getConfig('SOCIAL_FB_USERNAME') %>/"><i class="fa fa-facebook-official fa-2x" aria-hidden="true"></i></a>	    
+		    </div>
+        </div>
+      </div>
+    </div>
+   </div>
+ </div>
+</footer>

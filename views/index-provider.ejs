@@ -1,0 +1,23 @@
+<%- include('partials/how-it-works', {
+    data: [
+        {
+            icon: translate('HOW_IT_WORKS_SELLERS_STEP_1_ICON'),
+            header: translate('HOW_IT_WORKS_SELLERS_STEP_1_HEADER'),
+            desc: translate('HOW_IT_WORKS_SELLERS_STEP_1_DESC'),
+        },
+        {
+            icon: translate('HOW_IT_WORKS_SELLERS_STEP_2_ICON'),
+            header: translate('HOW_IT_WORKS_SELLERS_STEP_2_HEADER'),
+            desc: translate('HOW_IT_WORKS_SELLERS_STEP_2_DESC'),
+        },
+        {
+            icon: translate('HOW_IT_WORKS_SELLERS_STEP_3_ICON'),
+            header: translate('HOW_IT_WORKS_SELLERS_STEP_3_HEADER'),
+            desc: translate('HOW_IT_WORKS_SELLERS_STEP_3_DESC'),
+        }
+    ]
+}) %>
+
+<hr />
+
+<%- include('partials/st.categories.ejs', { userType: 2 }) %>

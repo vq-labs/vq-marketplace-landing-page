@@ -1,0 +1,180 @@
+<md-sidenav ng-cloak class="md-sidenav-left" md-component-id="left" md-whiteframe="4">
+	<md-content layout-margin>
+		<md-list flex>
+			<md-list-item id="vq-header-new-listing-xs-btn" class="hidden">
+				<a style="text-decoration: none;" href="/app/new-listing" target="_self">
+					<span class="blue-grey-text text-darken-1"><%- translate('HEADER_ADD_LISTING') %></span>
+				</a>
+			</md-list-item>
+
+			<md-list-item id="vq-header-dashboard-xs-btn" class="hidden">
+				<a style="text-decoration: none;" href="/app/dashboard" target="_self">
+					<span class="blue-grey-text text-darken-1"><%- translate('HEADER_DASHBOARD') %></span>
+				</a>
+			</md-list-item>
+
+			<md-list-item id="vq-header-browse-xs-btn" class="hidden">
+				<a style="text-decoration: none;" href="/app" target="_self">
+					<span class="blue-grey-text text-darken-1"><%- translate('HEADER_LISTINGS') %></span>
+				</a>
+			</md-list-item>
+
+			<md-list-item id="vq-header-profile-xs-btn" class="hidden">
+				<a ng-href="/app/profile/{{header.user.id}}" target="_self">
+					<%- translate('PROFILE') %>
+				</a>
+			</md-list-item>
+
+			<md-list-item id="vq-header-login-xs-btn" class="hidden">
+				<a style="text-decoration: none;" href="/app/login" target="_self">
+					<span><%- translate('LOGIN') || 'Login' %></span>
+				</a>
+			</md-list-item>
+
+			<md-list-item id="vq-header-signup-xs-btn" class="hidden">
+				<a style="text-decoration: none;" href="/app/signup" target="_self">
+					<span><%- translate('SIGNUP') || 'Signup' %></span>
+				</a>
+			</md-list-item>
+
+			<md-list-item id="vq-header-logout-xs-btn">
+				<a href="#" ng-click="header.logout()">
+					<%- translate('LOGOUT') %>
+				</a>
+			</md-list-item>	
+
+			<hr />
+
+			<% if (translate('HEADER_BUTTON_FOR_BUYERS')) { %>
+				<md-list-item class="md-1-line">
+					<a href="/" target="_self">
+						<%- translate('HEADER_BUTTON_FOR_BUYERS') %>
+					</a>
+				</md-list-item>
+			<% } %>
+
+			<md-list-item class="md-1-line">
+				<a href="/taskers" target="_self"><%- translate('HEADER_BUTTON_FOR_SELLERS') %></a>
+			</md-list-item>
+
+			<md-list-item class="md-1-line">
+				<a href="/impressum" target="_self"><%- translate('HOMEPAGE_FOOTER_IMPRINT') %></a>
+			</md-list-item>
+
+			<md-list-item class="md-1-line">
+				<a href="/terms" target="_self"><%- translate('HOMEPAGE_FOOTER_TERMS') %></a>
+			</md-list-item>
+
+			<md-list-item class="md-1-line">
+				<a href="/privacy" target="_self"><%- translate('HOMEPAGE_FOOTER_PRIVACY') %></a>
+			</md-list-item>
+
+		</md-list>
+	</md-content>
+</md-sidenav>
+
+<header ng-controller="headerCtrl as header" class="vq-nav" style="height:69px;">
+	<nav style="height:69px;">
+		<div class="nav-wrapper white" style="height:69px;">
+			<a href="/" target="_self" class="brand-logo">
+				<img class="valign" src="<%- getConfig('LOGO_URL') %>" style="margin-top:10px;margin-left:10px;height:45px;">	
+			</a>
+			<a href="#" ng-click="header.toggleLeft()" class="button-collapse blue-grey-text text-darken-1">
+				<i class="material-icons">menu</i>
+			</a>
+			<ul id="nav-mobile" class="right hide-on-med-and-down">
+				<% if (originalUrl === '/' && translate('HEADER_BUTTON_FOR_SELLERS')) { %>
+					<li id="vq-header-user-landing-page-btn">
+						<a href="/taskers" target="_self">
+							<span class="btn st-text-white" style="background-color: <%- getConfig('COLOR_PRIMARY') %>"><%- translate('HEADER_BUTTON_FOR_SELLERS') %></span>
+						</a>
+					</li>
+				<% } %>
+
+				<% if (originalUrl === '/taskers' && translate('HEADER_BUTTON_FOR_BUYERS')) { %>
+					<li id="vq-header-service-provider-landing-page-btn">
+						<a href="/" target="_self">
+							<span class="btn st-text-white" style="background-color: <%- getConfig('COLOR_PRIMARY') %>"><%- translate('HEADER_BUTTON_FOR_BUYERS') %></span>
+						</a>
+					</li>
+				<% } %>
+                
+				<li id="vq-header-new-listing-btn" class="hidden">
+					<a style="text-decoration: none;" href="/app/new-listing" target="_self">
+						<span class="blue-grey-text text-darken-1"><%- translate('HEADER_ADD_LISTING') %></span>
+					</a>
+				</li>
+
+				<li id="vq-header-dashboard-btn" class="hidden">
+					<a style="text-decoration: none;" href="/app/dashboard" target="_self">
+						<span class="blue-grey-text text-darken-1"><%- translate('HEADER_DASHBOARD') %></span>
+					</a>
+				</li>
+
+				<li id="vq-header-browse-btn" class="hidden">
+					<a style="text-decoration: none;" href="/app" target="_self">
+						<span class="blue-grey-text text-darken-1"><%- translate('HEADER_LISTINGS') %></span>
+					</a>
+				</li>
+
+				<li id="vq-header-login-btn" class="hidden">
+					<a style="text-decoration: none;" href="/app/login" target="_self">
+						<span class="blue-grey-text text-darken-1"><%- translate('LOGIN') %></span>
+					</a>
+				</li>
+				
+				<li id="vq-header-signup-btn" class="hidden">
+					<a style="text-decoration: none;" href="/app/signup" target="_self">
+						<span class="blue-grey-text text-darken-1"><%- translate('SIGNUP') || 'Signup' %></span>
+					</a>
+				</li>
+
+				<li id="vq-profile-btn" class="hidden" style="margin-right: 5px;">
+					<md-menu ng-cloak>
+						<img ng-click="$mdMenu.open($event)" style="cursor: pointer; width: 40px; height: 40px; border-radius: 50%;" ng-src="{{header.user.imageUrl || '/images/avatar.png'}}" alt="{{header.user.profile.firstName}} {{header.user.profile.lastName}}">
+						<md-menu-content width="4">
+							<a style="text-decoration:none;" ng-href="/app/profile/{{header.user.id}}" target="_self">
+								<md-menu-item>
+									<md-button>
+										<%- translate('PROFILE') %>
+									</md-button>
+								</md-menu-item>
+							</a>
+							<a ng-if="user.userType===2" style="text-decoration:none;" ng-href="/app/user-verifications" target="_self">
+								<md-menu-item>
+									<md-button>
+										<%- translate('USER_VERIFICATIONS') %>
+									</md-button>
+								</md-menu-item>
+							</a>
+							<a ng-if="user.userType===2" style="text-decoration:none;" ng-href="/app/user-preferences" target="_self">
+								<md-menu-item>
+									<md-button>
+										<%- translate('USER_PREFERENCES') %>
+									</md-button>
+								</md-menu-item>
+							</a>
+							<a style="text-decoration:none;" ng-href="/app/account" target="_self">
+								<md-menu-item>
+									<md-button>
+										<%- translate('ACCOUNT_SETTINGS') %>
+									</md-button>
+								</md-menu-item>
+							</a>
+							<md-menu-item>
+								<md-button ng-click="header.logout()">
+									<%- translate('LOGOUT') %>
+								</md-button>
+							</md-menu-item>
+						</md-menu-content>
+					</md-menu>
+				</li>	
+				<li class="hidden">
+					<a href="https://www.facebook.com/<%- getConfig('SOCIAL_FB_USERNAME') %>" style="color: #2a6496;">
+						<i class="fa fa-facebook-official fa-2x"></i>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+</header>

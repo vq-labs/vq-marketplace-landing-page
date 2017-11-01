@@ -1,0 +1,12 @@
+node_modules/
+deployments/
+
+.DS_Store
+public/stApp/
+public/.DS_Store
+npm-debug.log
+*.swp
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

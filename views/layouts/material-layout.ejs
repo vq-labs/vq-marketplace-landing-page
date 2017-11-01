@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<!---
+    POWERED BY VQ-MARKETPLACE (https://vq-labs.com)
+    We empower entrepreneurs with solutions in sharing economy. VQ Labs builds your online marketplace and turns your idea into reality.
+-->
+
+<html lang="<%- lang %>">
+
+<head>
+
+<% include ../meta/meta %>
+<% include ../bundles/styles %>
+<% include ../partials/fb-pixel %>  
+
+<link rel="stylesheet" href="/libs/angular-material/angular-material.min.css">
+<link rel="stylesheet" href="/libs/angular-material-expansion-panel/dist/md-expansion-panel.min.css" />
+<script>
+  var stCategories = JSON.parse('<%- JSON.stringify(categories) %>');
+  var VQ_API_URL = '<%- VQ_API_URL %>';
+</script>
+ <style>
+  .vq-welcome {
+      height: 500px;
+  }
+
+  .vq-welcome.vq-welcome-user-type-1 {
+      background: url(<%- getConfig("PROMO_URL") %>) no-repeat center center fixed;
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+  }
+
+  .vq-welcome.vq-welcome-user-type-2 {
+      background: url(<%- getConfig("PROMO_URL_SELLERS") %>) no-repeat center center fixed;
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+  }
+
+  .st-dark-bg {
+      background-color: #000;
+      color: #546e7a;
+  }
+
+  .btn-location {
+      background-color: white;
+      color: #26a69a;
+      border: 2px solid #26a69a; 
+      font-size: 12px;
+      text-align:center;
+  }
+
+  .btn-location:hover {
+      background-color: #26a69a; 
+      color: white
+  }
+  
+  .vq-color-primary {
+      background-color: <%- getConfig('COLOR_PRIMARY') %> !important;
+  }
+
+  .vq-text-color-primary {
+      color: <%- getConfig('COLOR_PRIMARY') %> !important;
+  }
+
+  /*
+    BLOG PAGE
+  */ 
+  .st-blog {
+    background: url(/images/blog.jpg) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+
+  }
+
+  .vq-bg-half-transparent {
+    background: rgba(70, 72, 82, 0.6)
+  }
+
+  .btn-blog {
+    background-color: white;
+    color: #26a69a;
+    border: 2px solid #26a69a; 
+    font-size: 12px;
+    text-align:center;
+  }
+  .btn-blog:hover {
+    background-color: #26a69a; 
+    color: white;
+  }
+  .st-press {
+        background: url(/images/press.jpg) no-repeat center center fixed; 
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+   }      
+
+   .st-freelancers {
+        background: url(/images/graffiti.jpg) no-repeat center center fixed; 
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+   }
+  </style>
+
+<base href="<% if (typeof base === 'undefined' ) { %>/<% } else { %><%-base%><% } %>">
+
+</head>
+ 
+<body id="vq-body" class="hidden" ng-app="vqApp" ng-strict-di style="background-color: rgb(250,250,250)">
+
+<% include ../partials/header %>   
+      
+<% 
+  var categoryIndex = categories.map(cat => '/category/' + cat.code).indexOf(originalUrl);
+  var category = categories[categoryIndex];
+
+  if (categoryIndex > -1) {
+%>
+  <style>
+    div.st-category-intro {
+          background: url(<%- category.bigImageUrl %>) no-repeat center center fixed; 
+          -webkit-background-size: cover;
+          -moz-background-size: cover;
+          -o-background-size: cover;
+          background-size: cover;
+    }  
+  </style>
+    <div class="st-category-intro" style="height:300px;">
+      <div class="vq-bg-half-transparent" style="position:relative;left:0; z-index: 1; width:100%; height:100%; overflow:hidden;">
+              <div class="row" style="position:relative;margin-top:50px;">
+                    <div class="col s12 center-align">        
+                        <h1>
+                          <span style="color:white;"><%- category.label %></span>
+                        </h1>
+                        <h2 id="st-page-header" style="font-size:30px; padding-bottom:10px; padding-top:30px;">
+                        <span class="st-bold" style="color:white;"><%- category.desc %></span>
+                        </h2>
+                    </div>
+              </div>
+    </div>
+  </div> 
+  <% } %>  
+
+<% if (originalUrl.split('?')[0] === '/') { %> 
+  <div class="vq-welcome vq-welcome-user-type-1">
+    <div class="vq-bg-half-transparent" style="position:relative; left:0; z-index: 1; width:100%; height:100%; overflow:hidden;">
+          <div class="row vq-welcome-intro">
+              <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center">      
+                <h1 style="color:white;">
+                  <%- translate("START_PAGE_HEADER") %>
+                </h1>
+                <h2 style="color:white;">
+                  <%- translate("START_PAGE_DESC") %>
+                </h2>
+              </div>
+          </div>
+
+          <div class="row vq-welcome-autocomplete">
+            <div class="col-xs-12 col-sm-10 col-md-6 col-lg-4 col-sm-offset-1 col-md-offset-3 col-lg-offset-4 text-center" ng-cloak ng-controller="taskAutoCompleteCtrl as ctrl">
+                      <form ng-submit="$event.preventDefault()">
+                        <md-autocomplete 
+                            ng-disabled="ctrl.isDisabled"
+                            md-no-cache="ctrl.noCache"
+                            md-selected-item="ctrl.selectedItem"
+                            md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
+                            md-search-text="ctrl.searchText"
+                            md-selected-item-change="ctrl.selectedItemChange(item)"
+                            md-items="item in ctrl.querySearch(ctrl.searchText)"
+                            md-item-text="item.label"
+                            md-min-length="0"
+                            placeholder="<%- translate('START_PAGE_AUTOCOMPLETE_LABEL') %>">
+                            <md-item-template>
+                              <a style="text-decoration: none; color:black;" ng-href="/app/new-listing?category={{item.code}}&utm_source=homepage">
+                                <div>
+                                  <img ng-src="{{item.img || '/images/category-default-img.jpeg' }}" style="width:40px; height:40px;"/>
+                                  <span class="item-title">
+                                    <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.label}}</span>
+                                  </span>
+                                </div> 
+                              </a> 
+                            </md-item-template>
+                            <md-not-found>
+                            <a href="/app/new-listing?utm_source=homepage"><%- translate('START_PAGE_AUTOCOMPLETE_CLIENTS_NO_RESULTS') %></a>
+                            </md-not-found>
+                        </md-autocomplete>
+                      </form>
+  
+              </div>
+          </div>
+    </div>
+  </div>
+<% } %>
+
+<% if (originalUrl.split('?')[0] === '/taskers') { %> 
+    <div class="vq-welcome vq-welcome-user-type-2">
+    <div class="vq-bg-half-transparent" style="position:relative; left:0; z-index: 1; width:100%; height:100%; overflow:hidden;">
+            <div class="row vq-welcome-intro" style="position:relative;margin-top:70px;">
+               <div class="col-xs-12 text-center">   
+                      <h1>
+                        <span><%- translate("START_PAGE_HEADER_SELLERS") %></span>
+                      </h1>
+                      <h2>
+                        <span><%- translate("START_PAGE_DESC_SELLERS") %></span>
+                      </h2>
+                  </div>
+            </div>
+
+          <div class="row" style="padding-top:40px;" >
+            <div class="col-xs-12 col-sm-10 col-md-6 col-lg-4 col-sm-offset-1 col-md-offset-3 col-lg-offset-4 text-center" ng-cloak ng-controller="taskAutoCompleteCtrl as ctrl">
+                      <form ng-submit="$event.preventDefault()">
+                        <md-autocomplete 
+                            ng-disabled="ctrl.isDisabled"
+                            md-no-cache="ctrl.noCache"
+                            md-selected-item="ctrl.selectedItem"
+                            md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
+                            md-search-text="ctrl.searchText"
+                            md-selected-item-change="ctrl.selectedItemChange(item)"
+                            md-items="item in ctrl.querySearch(ctrl.searchText)"
+                            md-item-text="item.label"
+                            md-min-length="0"
+                            placeholder="<%- translate('START_PAGE_AUTOCOMPLETE_LABEL_SELLERS') %>">
+                            <md-item-template>
+                              <a style="text-decoration: none; color:black;" ng-href="/app/new-listing?category={{item.code}}&utm_source=homepage">
+                                <div>
+                                  <img ng-src="{{item.img || '/images/category-default-img.jpeg' }}" style="width:40px; height:40px;"/>
+                                  <span class="item-title">
+                                    <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.label}}</span>
+                                  </span>
+                                </div> 
+                              </a> 
+                            </md-item-template>
+                            <md-not-found>
+                            <a href="/app"><%- translate('START_PAGE_AUTOCOMPLETE_PROVIDERS_NO_RESULTS') %></a>
+                            </md-not-found>
+                        </md-autocomplete>
+                      </form>
+  
+              </div>
+          </div>
+    </div>
+  </div>
+<% } %> 
+
+
+  <div class="container-fluid" style="max-width: 1036px;" >
+  	<%- body %>
+  </div>	
+    
+  <div class="container-fluid">  
+	  <% include ../partials/footer %>   
+  </div>
+
+  <% include ../bundles/scripts %>
+  <% include ../partials/tracking-code %>
+  
+</body>
+</html>

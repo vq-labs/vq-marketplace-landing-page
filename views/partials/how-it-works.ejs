@@ -1,0 +1,24 @@
+<div class="row" style="padding-top: 5px;">
+  <div class="center-align">
+    <h2 class="thin st-title" style="padding-bottom: 25px;"><%- translate('HOW_IT_WORKS') %></h2>
+  </div>	 
+	 
+  <% data.forEach((item, index) => { %> 
+    <div class="st-feature col-xs-12 col-sm-4 text-center">
+      <i style="font-size: 48px;" class="material-icons"><%- item.icon %></i>
+      <h3 class="vq-text-color-primary">
+        <%- item.header %>
+      </h3>
+      <p>
+        <%- item.desc %>
+      </p>
+    </div>
+  <% }); %>
+  <div class="row text-center hidden" style="padding-top:230px;">
+      <div class="col-md-offset-4 col-md-4 col-sm-6 col-sm-offset-3 col-xs-12">
+          <a href="/app" class="btn btn-large btn-block create-list-link vq-color-primary" style="margin: 0 auto;">
+              <b><%- translate('BROWSE_LISTINGS') %></b>
+          </a>
+      </div>
+  </div>
+</div>
