@@ -11,7 +11,7 @@ const makeInvisible = id => {
 const toogleLoggedInMenuPoints = (shouldShow, userType) => {
   const toogle = shouldShow ? makeVisible : makeInvisible;
 
-  if (!shouldShow && userType === 1) {
+  if (shouldShow && userType === 1) {
     toogle("vq-header-new-listing-btn");
     toogle("vq-header-new-listing-xs-btn");
   }
