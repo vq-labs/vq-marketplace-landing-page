@@ -9,8 +9,11 @@
             "type": "node",
             "request": "launch",
             "name": "Programm starten",
-            "program": "${workspaceRoot}/app.js",
-            "cwd": "${workspaceRoot}"
+            "program": "${workspaceRoot}/server.js",
+            "cwd": "${workspaceRoot}",
+            "env": {
+                "TENANT_ID": "testmarketplace"
+            }
         },
         {
             "type": "node",

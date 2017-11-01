@@ -1,7 +1,55 @@
+const makeVisible = id => {
+  document.getElementById(id).className =
+  document.getElementById(id).className.replace(/\bhidden\b/,'');
+};
+
+const makeInvisible = id => {
+  document.getElementById(id).className =
+  document.getElementById(id).className += 'trial';
+};
+
+const toogleLoggedInMenuPoints = (shouldShow, userType) => {
+  const toogle = shouldShow ? makeVisible : makeInvisible;
+
+  if (!shouldShow && userType === 1) {
+    toogle("vq-header-new-listing-btn");
+    toogle("vq-header-new-listing-xs-btn");
+  }
+
+  if (shouldShow && userType === 2) {
+    toogle("vq-header-browse-btn");
+    toogle("vq-header-browse-xs-btn");
+  }
+  
+  if (!shouldShow) {
+    toogle("vq-header-new-listing-btn");
+    toogle("vq-header-new-listing-xs-btn");
+    toogle("vq-header-browse-btn");
+    toogle("vq-header-browse-xs-btn");
+  }
+
+  toogle("vq-header-dashboard-btn");
+  toogle("vq-header-dashboard-xs-btn");
+  
+  
+  toogle("vq-header-logout-xs-btn");
+  toogle("vq-profile-btn");
+  toogle("vq-header-profile-xs-btn");
+};
+
+const toogleLoggedOutMenuPoints = (shouldShow) => {
+  const toogle = shouldShow ? makeVisible : makeInvisible;
+
+  toogle("vq-header-login-xs-btn");
+  toogle("vq-header-signup-xs-btn");
+  toogle("vq-header-login-btn");
+  toogle("vq-header-signup-btn");
+};
+
 const app = angular.module("vqApp", [
   'ngMaterial',
   "viciauth"
-])
+]);
 
 app.constant("API_URL", VQ_API_URL || "@@VQ_API_URL");
 
@@ -19,36 +67,15 @@ app.run((ViciAuth, API_URL) => {
     ViciAuth.configure("SIGNUP", "/signup/email");
     ViciAuth.configure("ME", "/me");
 
-    const makeVisible = id => {
-      document.getElementById(id).className =
-      document.getElementById(id).className.replace(/\bhidden\b/,'');
-    }
-
     ViciAuth
     .me(user => {
-      if (user.userType === 1) {
-        makeVisible("vq-header-new-listing-btn");
-        makeVisible("vq-header-new-listing-xs-btn");
-      }
+      toogleLoggedInMenuPoints(true, user.userType);
 
-      if (user.userType === 2) {
-        makeVisible("vq-header-browse-btn");
-        makeVisible("vq-header-browse-xs-btn");
-      }
-      
-      makeVisible("vq-header-dashboard-btn");
-      makeVisible("vq-header-dashboard-xs-btn");
-      
-      
-      makeVisible("vq-header-logout-xs-btn");
-      makeVisible("vq-profile-btn");
-      makeVisible("vq-header-profile-xs-btn");
       makeVisible("vq-body");
     }, err => {
-      makeVisible("vq-header-login-xs-btn");
-      makeVisible("vq-header-signup-xs-btn");
-      makeVisible("vq-header-login-btn");
-      makeVisible("vq-header-signup-btn");
+      toogleLoggedOutMenuPoints(true);
+      toogleLoggedInMenuPoints(false);
+
       makeVisible("vq-body");
 
       ViciAuth.destroyUserCredentials();
@@ -62,6 +89,9 @@ app.controller('headerCtrl', function(ViciAuth, $mdMenu, $mdSidenav) {
   header.toggleLeft = () => $mdSidenav('left').toggle();
 
 	header.logout = () => {
+    toogleLoggedInMenuPoints(false);
+    toogleLoggedOutMenuPoints(true);
+
 	  header.user = null;
 	  
     ViciAuth.logout();

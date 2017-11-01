@@ -132,7 +132,7 @@ const allowedDomains = {
 };
 
 const render = (req, res, template, data) => {
-	let tenantId = req.subdomains[req.subdomains.length - 1];
+	let tenantId = process.env.TENANT_ID || req.subdomains[req.subdomains.length - 1];
 
 	if (!tenantId) {
 		tenantId = allowedDomains[req.hostname];
@@ -152,13 +152,14 @@ const render = (req, res, template, data) => {
 			return res.status(500).send(err);
 		}
 
+		
 		data = data || {};
 		data.VQ_API_URL = CONFIG.VQ_API_URL.replace('?tenantId?', tenantId);
 		data.categories = configs[0];
 		data.getConfig = fieldKey => configs[1][fieldKey];
 		data.translate = i18n.getFactory(
 			tenantId,
-			req.query.lang || data.getConfig('DEFAULT_LANG') || CONFIG.DEFAULT_LANGUAGE
+			req.params.lang || req.query.lang || data.getConfig('DEFAULT_LANG') || CONFIG.DEFAULT_LANGUAGE
 		);
 		data.originalUrl = req.originalUrl;
 		data.layout = data.layout || "layouts/material-layout.ejs";
@@ -177,12 +178,12 @@ module.exports = app => {
 	/**
 	 * Landing page for Buyers / Clients (userType: 1)
 	 */
-	app.get("/", (req, res) => render(req, res, "index-client.ejs"));
+	app.get("/:lang?", (req, res) => render(req, res, "index-client.ejs"));
 
 	/**
 	 * Landing page for Sellers / Taskers (userType: 2)
 	 */
-	app.get("/taskers", (req, res) => render(req, res, "index-provider.ejs"));
+	app.get("/:lang?/taskers", (req, res) => render(req, res, "index-provider.ejs"));
 
 	app.get("/health", (req, res) => {
 		res.send('Health OK');

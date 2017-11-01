@@ -135,22 +135,22 @@
   </style>
     <div class="st-category-intro" style="height:300px;">
       <div class="vq-bg-half-transparent" style="position:relative;left:0; z-index: 1; width:100%; height:100%; overflow:hidden;">
-              <div class="row" style="position:relative;margin-top:50px;">
-                    <div class="col s12 center-align">        
-                        <h1>
-                          <span style="color:white;"><%- category.label %></span>
-                        </h1>
-                        <h2 id="st-page-header" style="font-size:30px; padding-bottom:10px; padding-top:30px;">
-                        <span class="st-bold" style="color:white;"><%- category.desc %></span>
-                        </h2>
-                    </div>
+        <div class="row" style="position:relative;margin-top:50px;">
+              <div class="col s12 center-align">        
+                  <h1>
+                    <span style="color:white;"><%- category.label %></span>
+                  </h1>
+                  <h2 id="st-page-header" style="font-size:30px; padding-bottom:10px; padding-top:30px;">
+                    <span class="st-bold" style="color:white;"><%- category.desc %></span>
+                  </h2>
               </div>
-    </div>
-  </div> 
-  <% } %>  
+        </div>
+      </div>
+  </div>
+<% } %>  
 
-<% if (originalUrl.split('?')[0] === '/') { %> 
-  <div class="vq-welcome vq-welcome-user-type-1">
+<% if (originalUrl.split('?')[0] === '/' || originalUrl.split('?')[0].length === 3) { %> 
+<div class="vq-welcome vq-welcome-user-type-1">
     <div class="vq-bg-half-transparent" style="position:relative; left:0; z-index: 1; width:100%; height:100%; overflow:hidden;">
           <div class="row vq-welcome-intro">
               <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center">      
@@ -199,7 +199,7 @@
   </div>
 <% } %>
 
-<% if (originalUrl.split('?')[0] === '/taskers') { %> 
+<% if (originalUrl.split('?')[0] === '/taskers' || (originalUrl.split('/')[1].length === 2 && originalUrl.split('/')[2] === 'taskers')) { %> 
     <div class="vq-welcome vq-welcome-user-type-2">
     <div class="vq-bg-half-transparent" style="position:relative; left:0; z-index: 1; width:100%; height:100%; overflow:hidden;">
             <div class="row vq-welcome-intro" style="position:relative;margin-top:70px;">
