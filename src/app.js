@@ -5,7 +5,7 @@ const makeVisible = id => {
 
 const makeInvisible = id => {
   document.getElementById(id).className =
-  document.getElementById(id).className += 'trial';
+  document.getElementById(id).className += ' hidden';
 };
 
 const toogleLoggedInMenuPoints = (shouldShow, userType) => {
