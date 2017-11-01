@@ -173,7 +173,7 @@ module.exports = app => {
 	/**
 	 * Landing page for Buyers / Clients (userType: 1)
 	 */
-	app.get("/:lang?", (req, res) => render(req, res, "index-client.ejs"));
+	app.get("/:lang([a-zA-Z]{2})?", (req, res) => render(req, res, "index-client.ejs"));
 
 	/**
 	 * Landing page for Sellers / Taskers (userType: 2)
