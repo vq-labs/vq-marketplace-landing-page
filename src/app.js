@@ -67,6 +67,8 @@ app.run((ViciAuth, API_URL) => {
     ViciAuth.configure("SIGNUP", "/signup/email");
     ViciAuth.configure("ME", "/me");
 
+    ViciAuth.loadUserCredentials();
+
     ViciAuth
     .me(user => {
       toogleLoggedInMenuPoints(true, user.userType);

@@ -29,7 +29,7 @@ angular.module("viciauth",[ ])
 		authToken = token;
 		authUserId = userId;
 
-		$http.defaults.headers.common['@@HEADERS.TOKEN'] = token;
+		$http.defaults.headers.common['X-Auth-Token'] = token;
 	};
 	
 	const storeUserCredentials = (token, userId) => {
