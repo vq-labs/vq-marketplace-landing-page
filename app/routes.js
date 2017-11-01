@@ -170,6 +170,16 @@ const render = (req, res, template, data) => {
 )};
 
 module.exports = app => {
+	app.get('/app', (req, res) =>
+		render(req, res, 'app/index.ejs', {
+			layout: 'layouts/empty-bin.ejs'
+		}));
+
+	app.get('/app/**', (req, res) =>
+		render(req, res, 'app/index.ejs', {
+			layout: 'layouts/empty-bin.ejs'
+		}));
+
 	/**
 	 * Landing page for Buyers / Clients (userType: 1)
 	 */
@@ -178,12 +188,9 @@ module.exports = app => {
 	/**
 	 * Landing page for Sellers / Taskers (userType: 2)
 	 */
-	app.get("/:lang?/taskers", (req, res) => render(req, res, "index-provider.ejs"));
+	app.get("/:lang([a-zA-Z]{2})?/taskers", (req, res) => render(req, res, "index-provider.ejs"));
 
-	app.get('/app/**', (req, res) =>
-		render(req, res, 'app/index.ejs', {
-			layout: 'layouts/empty-bin.ejs'
-		}));
+	
 
 	app.get("/health", (req, res) => {
 		res.send('Health OK');
