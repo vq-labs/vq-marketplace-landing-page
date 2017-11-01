@@ -76,7 +76,14 @@ angular.module("viciauth",[ ])
 		token: $window.localStorage.getItem(LOCAL_TOKEN_KEY)
 	}).then(response => callback(response.data));
 
-	const logout = () => $http.post(apiFactory("LOGOUT")).then(data => destroyUserCredentials());
+	const logout = () => {
+
+		$http.post(apiFactory("LOGOUT")).then(data => {
+			console.log(data);
+		})
+
+		destroyUserCredentials();
+	};
  
 	const me = (callback, errFn) => $http.get(apiFactory("ME"))
 		.then(response => callback(response.data), response => errFn(response));
