@@ -128,7 +128,9 @@ ResponseService.error500 = function(res){
 };
 
 const allowedDomains = {
-	"clickforwork.hu": "click4work"
+	"clickforwork.hu": "click4work",
+	"talentwand.de": "talentwand",
+	"bitcoinswap.com": "bitcoinswap"
 };
 
 const render = (req, res, template, data) => {
@@ -139,7 +141,8 @@ const render = (req, res, template, data) => {
 	}
 
 	if (!tenantId) {
-		return res.status(404).send('Marketplace does not exist.');
+		return res.status(404)
+			.send('Marketplace does not exist.');
 	}
 
 	async.parallel([
@@ -149,9 +152,10 @@ const render = (req, res, template, data) => {
 		cb => appLabelProvider(tenantId, false, 'hu', cb)
 	], (err, configs) => {
 		if (err) {
-			return res.status(500).send(err);
+			if (!configs[0] || !configs[1]) {
+				return res.status(500).send(err);
+			}
 		}
-
 		
 		data = data || {};
 		data.VQ_API_URL = CONFIG.VQ_API_URL.replace('?tenantId?', tenantId);
