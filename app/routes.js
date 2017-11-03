@@ -7,8 +7,6 @@ const vqSDK = require("./vq-sdk/index.js")(CONFIG.VQ_API_URL, CONFIG.VQ_TENANT_A
 
 const LAYOUT_MATERIAL = "layouts/material-layout.ejs";
 
-var categories, appMeta, appLabels, appConfig;
-
 const tenantData = {};
 
 const categoryProvider = (tenantId, forceRequest, cb) => {
@@ -24,7 +22,7 @@ const categoryProvider = (tenantId, forceRequest, cb) => {
 
 			tenantData[tenantId].categories = rCategories;
 
-			return cb(null, categories);
+			return cb(null, tenantData[tenantId].categories);
 		});
 	} else {
 		return cb(null, tenantData[tenantId].categories);
@@ -36,7 +34,7 @@ const appConfigProvider = (tenantId, forceRequest, cb) => {
 
 	tenantData[tenantId] = tenantData[tenantId] || {};
 
-	if (!appConfig || forceRequest) {
+	if (!tenantData[tenantId].appConfig || forceRequest) {
 		return vqSDK.getAppConfig(tenantId, (err, rAppConfig) => {
 			if (err) {
 				return cb(err);
