@@ -1,26 +1,34 @@
-var express = require('express');
-var app = express();
-var cors = require('cors');
+const express = require('express');
+const app = express();
+const cors = require('cors');
 
-var CONFIG = require("./app/config.js");
-var port = CONFIG.PORT;
+const CONFIG = require("./app/config.js");
+const port = CONFIG.PORT;
  
-var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
-var expressLayouts = require('express-ejs-layouts');
-var compression = require('compression');
-var minify = require('express-minify');
-var http = require("http");
-var morgan = require('morgan');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const expressLayouts = require('express-ejs-layouts');
+const compression = require('compression');
+const minify = require('express-minify');
+const http = require("http");
+const morgan = require('morgan');
 
 // app.use(morgan('dev'));
 // app.use(compression());
 // app.use(minify());
 app.set('view engine', 'ejs');
 app.set('layout', 'layouts/layout');
-app.use(expressLayouts);
 app.set('json spaces', 4);
 
+app.use((req, res, next) => {
+  if (req.url.substr(-1) === '/' && req.url.length > 1) {
+    req.url.slice(0, -1);
+  }
+    
+  next();
+});
+
+app.use(expressLayouts);
 app.use(require("cors")());
 app.use(cookieParser());
 app.use(bodyParser.json());

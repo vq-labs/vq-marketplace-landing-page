@@ -7,6 +7,18 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Click4Work",
+            "program": "${workspaceRoot}/server.js",
+            "cwd": "${workspaceRoot}",
+            "env": {
+                "VQ_TENANT_API_URL": "https://vqmarketplace.vq-labs.com/api",
+                "VQ_API_URL": "https://click4work.vq-labs.com/api",
+                "TENANT_ID": "click4work"
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Dev Tenant",
             "program": "${workspaceRoot}/server.js",
             "cwd": "${workspaceRoot}",
