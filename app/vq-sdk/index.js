@@ -19,7 +19,7 @@ module.exports = (VQ_API_URL, VQ_TENANT_API_URL) => {
     };
 
     function getTenants (callback) {
-        var url = VQ_TENANT_API_URL + '/tenan?status=3';
+        var url = VQ_TENANT_API_URL + '/tenant?status=3';
 
         makeRequest(url, (err, data) => callback(err, data || []));
     }

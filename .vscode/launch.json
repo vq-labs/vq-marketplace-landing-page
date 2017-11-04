@@ -7,11 +7,13 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Programm starten",
+            "name": "Dev Tenant",
             "program": "${workspaceRoot}/server.js",
             "cwd": "${workspaceRoot}",
             "env": {
-                "TENANT_ID": "testmarketplace"
+                "VQ_TENANT_API_URL": "http://vqmarketplace.viciqloud.com/api",
+                "VQ_API_URL": "http://?tenantId?.viciqloud.com/api",
+                "TENANT_ID": "test9"
             }
         },
         {
