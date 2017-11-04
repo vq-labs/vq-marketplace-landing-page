@@ -67,15 +67,15 @@ module.exports = (VQ_API_URL, VQ_TENANT_API_URL) => {
                 return callback(errDTO(err));
             }
 
+            const resObj = parseJSON(body);
+
             if (response.statusCode !== 200) {
-                return callback(errDTO("Status code:" + response.statusCode));
-            }
+                if (resObj.code === "TENANT_NOT_FOUND") {
+                    return callback({ status:404 });
+                }
 
-            if (!body) {
-                return callback({ status:404 });
+                return callback(errDTO("Status code:" + response.statusCode, response.statusCode));
             }
-
-            var resObj = parseJSON(body);
 
             return callback(null, resObj);
        });
@@ -93,9 +93,9 @@ module.exports = (VQ_API_URL, VQ_TENANT_API_URL) => {
 
        function errDTO(err, statusCode) {
           return {
-            err : true,
-            status : statusCode ? statusCode : 502,
-            data : err
+            err: true,
+            status: statusCode ? statusCode : 502,
+            data: err
           };
        }
 
