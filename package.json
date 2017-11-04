@@ -42,6 +42,7 @@
   },
   "scripts": {
     "start": "gulp build && node server.js",
+    "start:local-tenant": "VQ_API_URL=http://localhost:8080/api VQ_TENANT_API_URL=http://localhost:8081/api gulp build && node server.js",
     "build": "gulp build"
   },
   "author": "VQ LABS (https://vq-labs.com)",

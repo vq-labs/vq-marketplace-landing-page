@@ -19,6 +19,18 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Local Tenant",
+            "program": "${workspaceRoot}/server.js",
+            "cwd": "${workspaceRoot}",
+            "env": {
+                "VQ_TENANT_API_URL": "http://localhost:8081/api",
+                "VQ_API_URL": "http://localhost:8080/api",
+                "TENANT_ID": "testmarketplace"
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Unknown tenant",
             "program": "${workspaceRoot}/server.js",
             "cwd": "${workspaceRoot}",

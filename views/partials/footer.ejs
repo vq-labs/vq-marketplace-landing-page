@@ -57,17 +57,29 @@
                             </div>
                             <div class="col-sm-3">
                                 <h5 class="st-text-white st-bold"><%- translate('HOMEPAGE_FOOTER_SOCIAL_MEDIA') %></h5>
-                                <a style="color:white"  href="https://www.facebook.com/<%- getConfig('SOCIAL_FB_USERNAME') %>/"><i class="fa fa-facebook-official fa-2x" aria-hidden="true"></i></a>	    
+                                <%
+                                [
+                                    [ "SOCIAL_FB_USERNAME", "fa-facebook-official", "https://www.facebook.com/"  ],
+                                    [ "SOCIAL_TWITTER_USERNAME", "fa-twitter", "https://www.twitter.com/"  ],
+                                    [ "SOCIAL_INSTAGRAM_USERNAME", "fa-instagram", "https://www.instagram.com/"  ],
+                                    [ "SOCIAL_YOUTUBE_USERNAME", "fa-youtube", "https://www.youtube.com/"  ],
+                                    [ "SOCIAL_GITHUB_USERNAME", "fa-github", "https://www.github.com/"  ]
+                                ].forEach(function(socialItem) {
+                                    if (getConfig(socialItem[0])) {
+                                %>
+                                    <a style="color:white"  href="<%- getConfig(socialItem[2]) %><%- getConfig(socialItem[0]) %>/" target="_blank"><i class="fa <%- socialItem[1] %> fa-2x" aria-hidden="true"></i></a>	    
+                                <% }
+                                }); %>
                             </div>
                             <div class="col-sm-3">
                                 <ul style="margin-top: 15px;">
                                     <li>
-                                        <a style="color: white;" href="/en">
+                                        <a style="color: white;" href="/en<%- originalUrl.split('/').filter(_ => _.length !== 2).join('/') %>">
                                             <strong>English</strong>
                                         </a>
                                     </li>
                                     <li>
-                                        <a style="color: white;" href="/hu">
+                                        <a style="color: white;" href="/hu<%- originalUrl.split('/').filter(_ => _.length !== 2).join('/') %>">
                                             <strong>Magyar</strong>
                                         </a>
                                     </li>
