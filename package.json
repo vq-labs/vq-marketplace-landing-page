@@ -34,8 +34,10 @@
     "del": "^2.2.2",
     "gulp": "^3.9.1",
     "gulp-babel": "^7.0.0",
+    "gulp-minify": "^1.0.0",
     "gulp-ng-annotate": "^2.0.0",
     "gulp-replace-task": "^0.11.0",
+    "gulp-uglify": "^3.0.0",
     "yargs": "^6.6.0"
   },
   "scripts": {

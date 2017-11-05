@@ -7,7 +7,8 @@ const spawn = require('child_process').spawn;
 const del = require('del');
 const path = require('path');
 const babel = require('gulp-babel');
-
+const uglify = require('gulp-uglify');
+const minify = require('gulp-minify');
 const targetPath = 'public/stApp';
 
 gulp.task('clean', () => del([ `${targetPath}/**` ]));
@@ -52,6 +53,8 @@ gulp.task('build', [ "clean" ], () => {
 			presets: ['es2015']
 		}))
     .pipe(ngAnnotate())
+    .pipe(uglify())
+    .pipe(minify())
     .pipe(gulp.dest('public/stApp'));
 
   const templates = gulp

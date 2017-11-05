@@ -15,6 +15,17 @@
                 "VQ_API_URL": "https://click4work.vq-labs.com/api",
                 "TENANT_ID": "click4work"
             }
+        }, {
+            "type": "node",
+            "request": "launch",
+            "name": "TalentWand",
+            "program": "${workspaceRoot}/server.js",
+            "cwd": "${workspaceRoot}",
+            "env": {
+                "VQ_TENANT_API_URL": "https://vqmarketplace.vq-labs.com/api",
+                "VQ_API_URL": "http://localhost:8080/api",
+                "TENANT_ID": "vq"
+            }
         },
         {
             "type": "node",

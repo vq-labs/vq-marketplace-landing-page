@@ -25,10 +25,23 @@
                                     <li>
                                         <a style="color: white;" href="<%- getConfig('CUSTOM_CONTACT_PAGE_URL') %>"><%- translate('HOMEPAGE_FOOTER_CONTACT') || 'Contact' %></a>
                                     </li>
+
                                     <% } %>
                                     <% if(getConfig('CUSTOM_BLOG_PAGE_URL')) { %>
                                     <li>
                                         <a style="color: white;" href="<%- getConfig('CUSTOM_BLOG_PAGE_URL') %>"><%- translate('HOMEPAGE_FOOTER_BLOG') || 'Blog' %></a>
+                                    </li>
+                                    <% } %>
+
+                                    <% if(getConfig('CUSTOM_HOW_IT_WORKS_URL')) { %>
+                                    <li>
+                                        <a style="color: white;" href="<%- getConfig('CUSTOM_HOW_IT_WORKS_URL') %>"><%- translate('HOMEPAGE_FOOTER_HOW_IT_WORKS') || 'How it works?' %></a>
+                                    </li>
+                                    <% } %>
+
+                                    <% if(getConfig('CUSTOM_FAQ_URL')) { %>
+                                    <li>
+                                        <a style="color: white;" href="<%- getConfig('CUSTOM_FAQ_URL') %>"><%- translate('HOMEPAGE_FOOTER_FAQ') || 'FAQ' %></a>
                                     </li>
                                     <% } %>
                                 </ul>	
