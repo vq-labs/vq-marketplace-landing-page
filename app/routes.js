@@ -183,11 +183,12 @@ const render = (req, res, template, data) => {
 		}
 		
 		data = data || {};
+		data.TENANT_ID = tenantId;
 		data.VQ_API_URL = CONFIG.VQ_API_URL.replace('?tenantId?', tenantId);
 		data.categories = configs[0];
 		data.getConfig = fieldKey => configs[1][fieldKey];
 		data.getPost = code => configs[2][code];
-		
+
 		data.translate = i18n.getFactory(
 			tenantId,
 			req.params.lang || req.query.lang || data.getConfig('DEFAULT_LANG') || CONFIG.DEFAULT_LANGUAGE
