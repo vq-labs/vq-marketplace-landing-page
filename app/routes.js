@@ -53,6 +53,31 @@ const appConfigProvider = (tenantId, forceRequest, cb) => {
 	return cb(null, tenantData[tenantId].appConfig);
 };
 
+const postProvider = (tenantId, forceRequest, cb) => {
+	cb = cb || function() {};
+
+	tenantData[tenantId] = tenantData[tenantId] || {};
+
+	if (!tenantData[tenantId].posts || forceRequest) {
+		return vqSDK.getPosts(tenantId, (err, rPosts) => {
+			if (err) {
+				return cb(err);
+			}
+
+			tenantData[tenantId].posts = tenantData[tenantId].rPosts || {};
+			
+			rPosts
+			.map(post => {
+				tenantData[tenantId].posts[post.code] = post.body;
+			});
+			
+			return cb(null, tenantData[tenantId].posts);
+		});
+	}
+
+	return cb(null, tenantData[tenantId].posts);
+};
+
 const appLabelProvider = (tenantId, forceRequest, lang, cb) => {
 	cb = cb || function() {};
 
@@ -93,6 +118,7 @@ const getConfigs = () => {
 			appLabelProvider(tenantId, true, 'en');
 			appLabelProvider(tenantId, true, 'hu');
 			appConfigProvider(tenantId, true);
+			postProvider(tenantId, true);
 
 			cb();
 		}, err => {
@@ -146,8 +172,9 @@ const render = (req, res, template, data) => {
 	async.parallel([
 		cb => categoryProvider(tenantId, false, cb),
 		cb => appConfigProvider(tenantId, false, cb),
+		cb => postProvider(tenantId, false, cb),
 		cb => appLabelProvider(tenantId, false, 'en', cb),
-		cb => appLabelProvider(tenantId, false, 'hu', cb)
+		cb => appLabelProvider(tenantId, false, 'hu', cb),
 	], (err, configs) => {
 		if (err) {
 			if (!configs[0] || !configs[1]) {
@@ -159,6 +186,8 @@ const render = (req, res, template, data) => {
 		data.VQ_API_URL = CONFIG.VQ_API_URL.replace('?tenantId?', tenantId);
 		data.categories = configs[0];
 		data.getConfig = fieldKey => configs[1][fieldKey];
+		data.getPost = code => configs[2][code];
+		
 		data.translate = i18n.getFactory(
 			tenantId,
 			req.params.lang || req.query.lang || data.getConfig('DEFAULT_LANG') || CONFIG.DEFAULT_LANGUAGE

@@ -4,7 +4,8 @@ const async = require("async");
 const API_PATHS = {
    CATEGORIES: "/app_task_categories",
    APP_LABEL: "/app_label",
-   APP_CONFIG: "/app_config"
+   APP_CONFIG: "/app_config",
+   POST: "/post"
 };
 
 module.exports = (VQ_API_URL, VQ_TENANT_API_URL) => {
@@ -12,10 +13,11 @@ module.exports = (VQ_API_URL, VQ_TENANT_API_URL) => {
     VQ_API_URL = VQ_API_URL || "http://localhost:8080/api";
 
     return {
-      getTenants,
-      getCategories,
-      getAppLabels,
-      getAppConfig
+        getPosts,
+        getTenants,
+        getCategories,
+        getAppLabels,
+        getAppConfig
     };
 
     function getTenants (callback) {
@@ -46,6 +48,14 @@ module.exports = (VQ_API_URL, VQ_TENANT_API_URL) => {
         url = url.replace('?tenantId?', tenantId);
 
         makeRequest(url, (err, data) => callback(err, data ? data[0]: {}));
+    }
+
+    function getPosts (tenantId, callback) {
+        var url = VQ_API_URL + API_PATHS.POST;
+
+        url = url.replace('?tenantId?', tenantId);
+
+        makeRequest(url, (err, data) => callback(err, data || []));
     }
 
     function getCategories (tenantId, callback) {

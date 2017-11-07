@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "type": "node",
             "request": "launch",
@@ -25,6 +26,18 @@
                 "VQ_TENANT_API_URL": "https://vqmarketplace.vq-labs.com/api",
                 "VQ_API_URL": "http://localhost:8080/api",
                 "TENANT_ID": "vq"
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Sercan",
+            "program": "${workspaceRoot}/server.js",
+            "cwd": "${workspaceRoot}",
+            "env": {
+                "VQ_TENANT_API_URL": "http://vqmarketplace.viciqloud.com/api",
+                "VQ_API_URL": "http://?tenantId?.viciqloud.com/api",
+                "TENANT_ID": "sercan"
             }
         },
         {

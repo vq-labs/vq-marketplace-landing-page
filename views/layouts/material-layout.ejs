@@ -11,7 +11,6 @@
 
 <% include ../meta/meta %>
 <% include ../bundles/styles %>
-<% include ../partials/fb-pixel %>  
 
 <link rel="stylesheet" href="/libs/angular-material/angular-material.min.css">
 <link rel="stylesheet" href="/libs/angular-material-expansion-panel/dist/md-expansion-panel.min.css" />
@@ -111,6 +110,9 @@
   </style>
 
 <base href="<% if (typeof base === 'undefined' ) { %>/<% } else { %><%-base%><% } %>">
+
+
+<%- getPost("CUSTOM_SCRIPTS") %>
 
 </head>
  
