@@ -111,7 +111,7 @@
                                         </a>
                                     </li>
                                     <%
-                                        getConfig("LANGUAGES")
+                                        (getConfig("LANGUAGES") || '')
                                         .split(',')
                                         .forEach(LANG => {
                                     %>
