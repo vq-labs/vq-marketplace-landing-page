@@ -85,7 +85,31 @@
                                 }); %>
                             </div>
                             <div class="col-sm-3">
+                                <%
+                                        const LANG_LABELS = {
+                                            "cs": "Czech",
+                                            "da": "Danish",
+                                            "nl": "Dutch",
+                                            "en": "English",
+                                            "et": "Estonian",
+                                            "fi": "Finnish",
+                                            "fr": "French",
+                                            "de": "German",
+                                            "hu": "Magyar",
+                                            "it": "Italian",
+                                            "pl": "Polish",
+                                            "pt": "Portuguese",
+                                            "ru": "Russian",
+                                            "es": "Spanish",
+                                            "sv": "Swedish"
+                                        };
+                                %>
                                 <ul style="margin-top: 15px;">
+                                    <li>
+                                        <a style="color: white;" href="/<%-getConfig('DEFAULT_LANG')%><%- originalUrl.split('/').filter(_ => _.length !== 2).join('/') %>">
+                                            <strong><%- LANG_LABELS[getConfig('DEFAULT_LANG').toLowerCase()] %></strong>
+                                        </a>
+                                    </li>
                                     <%
                                         getConfig("LANGUAGES")
                                         .split(',')
@@ -93,11 +117,11 @@
                                     %>
                                         <li>
                                             <a style="color: white;" href="/<%- LANG %><%- originalUrl.split('/').filter(_ => _.length !== 2).join('/') %>">
-                                                <strong><%- lang %></strong>
+                                                <strong><%- LANG_LABELS[LANG.toLowerCase()] %></strong>
                                             </a>
                                         </li>
                                     <%
-                                    });
+                                        });
                                     %>
                                 </ul>
                             </div>
