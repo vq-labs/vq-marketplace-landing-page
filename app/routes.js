@@ -3,6 +3,8 @@ const async = require("async");
 const CONFIG = require("./config.js");
 const i18n = require("./services/i18n.js");
 const path = require('path');
+const ejs = require('ejs');
+
 const vqSDK = require("./vq-sdk/index.js")(CONFIG.VQ_API_URL, CONFIG.VQ_TENANT_API_URL);
 
 const LAYOUT_MATERIAL = "layouts/material-layout.ejs";
@@ -198,6 +200,19 @@ const render = (req, res, template, data) => {
 		data.lang = req.query.lang || 'en';
 
 		return res.render(template, data);
+		/**
+		if (typeof template === 'string') {
+			return res.render(template, data);
+		}
+
+		const tmpl = fs.readFileSync(__dirname + "/../views/layouts/material-layout.ejs", "utf8");
+
+		data.body = ejs.render(data.getPost(`${template.slug}`), data);
+
+		// const renderedPost = ejs.render(tmpl, data, {});
+		
+		return res.send(data.body);
+		*/
 	}
 )};
 
@@ -223,7 +238,6 @@ module.exports = app => {
 	app.get("/:lang([a-zA-Z]{2})?/taskers", (req, res) => render(req, res, "index-provider.ejs"));
 
 	
-
 	app.get("/health", (req, res) => {
 		res.send('Health OK');
 	});
@@ -231,32 +245,18 @@ module.exports = app => {
 	/**
 	You can create pages under views/pages
 	Subfolders will be mapped to main slugs and subslags to the file names as st.<subslug>.index.ejs
-	*/
+
 	app.get("/:slug/:subSlug?", (req, res, next) => {
-		var pageSlug = req.params.slug.toLowerCase();
-		var pageSubSlug = req.params.subSlug ? req.params.subSlug.toLowerCase() : false;
-		var fileName;
-
-		var SEO = {};
-
-		SEO.pageSlug = pageSlug;
-
-		if (pageSubSlug) {
-			fileName = pageSlug + "/st." + pageSubSlug + ".index.ejs";
-		} else {
-			fileName =  "/st." + pageSlug + ".index.ejs";
-		}
+		const slug = req.params.slug.toLowerCase();
+		const subSlug = req.params.subSlug ? req.params.subSlug.toLowerCase() : false;
 		
-		var viewPath = "pages/" + fileName;
-		var filePath = __dirname + "/../views/" + viewPath;
+		
+		return render(req, res, { slug, subSlug}, {});
 
-		if (fs.existsSync(filePath)) {
-			return render(req, res, viewPath);
-		}
-			
 		return next();
 	});	
-    
+	*/
+	
 	app.use((req, res) => {
 		res.status(404);
 

@@ -86,16 +86,19 @@
                             </div>
                             <div class="col-sm-3">
                                 <ul style="margin-top: 15px;">
-                                    <li>
-                                        <a style="color: white;" href="/en<%- originalUrl.split('/').filter(_ => _.length !== 2).join('/') %>">
-                                            <strong>English</strong>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a style="color: white;" href="/hu<%- originalUrl.split('/').filter(_ => _.length !== 2).join('/') %>">
-                                            <strong>Magyar</strong>
-                                        </a>
-                                    </li>
+                                    <%
+                                        getConfig("LANGUAGES")
+                                        .split(',')
+                                        .forEach(LANG => {
+                                    %>
+                                        <li>
+                                            <a style="color: white;" href="/<%- LANG %><%- originalUrl.split('/').filter(_ => _.length !== 2).join('/') %>">
+                                                <strong><%- lang %></strong>
+                                            </a>
+                                        </li>
+                                    <%
+                                    });
+                                    %>
                                 </ul>
                             </div>
                         </div>
