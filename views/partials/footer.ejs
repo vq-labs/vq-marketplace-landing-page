@@ -106,7 +106,7 @@
                                 %>
                                 <ul style="margin-top: 15px;">
                                     <li>
-                                        <a style="color: white;" href="/<%-getConfig('DEFAULT_LANG')%>g<%- originalUrl.split('/').filter(_ => _.length !== 2).join('/') %>">
+                                        <a style="color: white;" href="/<%-getConfig('DEFAULT_LANG')%><%- originalUrl.split('/').filter(_ => _.length !== 2).join('/') %>">
                                             <strong><%- LANG_LABELS[(getConfig('DEFAULT_LANG') || 'en').toLowerCase()] %></strong>
                                         </a>
                                     </li>
