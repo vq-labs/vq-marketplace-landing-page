@@ -24,7 +24,7 @@
             "cwd": "${workspaceRoot}",
             "env": {
                 "VQ_TENANT_API_URL": "https://vqmarketplace.vq-labs.com/api",
-                "VQ_API_URL": "http://localhost:8080/api",
+                "VQ_API_URL": "https://vq.vq-labs.com/api",
                 "TENANT_ID": "vq"
             }
         },

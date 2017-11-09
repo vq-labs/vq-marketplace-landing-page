@@ -48,6 +48,13 @@ const appConfigProvider = (tenantId, forceRequest, cb) => {
 				tenantData[tenantId].appConfig[label.fieldKey] = label.fieldValue;
 			});
 			
+			
+			const defaultLang = (tenantData[tenantId].appConfig["DEFAULT_LANG"] || 'en');
+			const langArr = (tenantData[tenantId].appConfig["LANGUAGES"] || '').split(",");
+
+			appLabelProvider(tenantId, false, defaultLang, () => {});
+			langArr.forEach(LANG => appLabelProvider(tenantId, false, LANG, () => {}));
+		
 			return cb(null, tenantData[tenantId].appConfig);
 		});
 	}
@@ -117,8 +124,6 @@ const getConfigs = () => {
 
 		async.eachSeries(tenants, (tenantId, cb) => {
 			categoryProvider(tenantId, true);
-			appLabelProvider(tenantId, true, 'en');
-			appLabelProvider(tenantId, true, 'hu');
 			appConfigProvider(tenantId, true);
 			postProvider(tenantId, true);
 
@@ -174,9 +179,7 @@ const render = (req, res, template, data) => {
 	async.parallel([
 		cb => categoryProvider(tenantId, false, cb),
 		cb => appConfigProvider(tenantId, false, cb),
-		cb => postProvider(tenantId, false, cb),
-		cb => appLabelProvider(tenantId, false, 'en', cb),
-		cb => appLabelProvider(tenantId, false, 'hu', cb),
+		cb => postProvider(tenantId, false, cb)
 	], (err, configs) => {
 		if (err) {
 			if (!configs[0] || !configs[1]) {
