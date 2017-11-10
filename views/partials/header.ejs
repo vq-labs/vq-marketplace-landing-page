@@ -1,79 +1,78 @@
-<md-sidenav ng-cloak class="md-sidenav-left" md-component-id="left" md-whiteframe="4">
-	<md-content layout-margin>
-		<md-list flex>
-			<md-list-item id="vq-header-new-listing-xs-btn" class="hidden">
-				<a style="text-decoration: none;" href="/app/new-listing" target="_self">
-					<span class="blue-grey-text text-darken-1"><%- translate('HEADER_ADD_LISTING') %></span>
-				</a>
-			</md-list-item>
-
-			<md-list-item id="vq-header-dashboard-xs-btn" class="hidden">
-				<a style="text-decoration: none;" href="/app/dashboard" target="_self">
-					<span class="blue-grey-text text-darken-1"><%- translate('HEADER_DASHBOARD') %></span>
-				</a>
-			</md-list-item>
-
-			<md-list-item id="vq-header-browse-xs-btn" class="hidden">
-				<a style="text-decoration: none;" href="/app" target="_self">
-					<span class="blue-grey-text text-darken-1"><%- translate('HEADER_LISTINGS') %></span>
-				</a>
-			</md-list-item>
-
-			<md-list-item id="vq-header-profile-xs-btn" class="hidden">
-				<a ng-href="/app/profile/{{header.user.id}}" target="_self">
-					<%- translate('PROFILE') %>
-				</a>
-			</md-list-item>
-
-			<md-list-item id="vq-header-login-xs-btn" class="hidden">
-				<a style="text-decoration: none;" href="/app/login" target="_self">
-					<span><%- translate('LOGIN') %></span>
-				</a>
-			</md-list-item>
-
-			<md-list-item id="vq-header-signup-xs-btn" class="hidden">
-				<a style="text-decoration: none;" href="/app/signup" target="_self">
-					<span><%- translate('SIGNUP') %></span>
-				</a>
-			</md-list-item>
-
-			<md-list-item id="vq-header-logout-xs-btn">
-				<a href="#" ng-click="header.logout()">
-					<%- translate('LOGOUT') %>
-				</a>
-			</md-list-item>	
-
-			<hr />
-
-			<% if (translate('HEADER_BUTTON_FOR_BUYERS')) { %>
-				<md-list-item class="md-1-line">
-					<a href="/" target="_self">
-						<%- translate('HEADER_BUTTON_FOR_BUYERS') %>
+<header ng-controller="headerCtrl as header" class="vq-nav" style="height:69px;">
+	<md-sidenav ng-cloak class="md-sidenav-left" md-component-id="left" md-whiteframe="4">
+		<md-content layout-margin>
+			<md-list flex>
+				<md-list-item id="vq-header-new-listing-xs-btn" class="hidden">
+					<a style="text-decoration: none;" href="/app/new-listing" target="_self">
+						<span class="blue-grey-text text-darken-1"><%- translate('HEADER_ADD_LISTING') %></span>
 					</a>
 				</md-list-item>
-			<% } %>
 
-			<md-list-item class="md-1-line">
-				<a href="/taskers" target="_self"><%- translate('HEADER_BUTTON_FOR_SELLERS') %></a>
-			</md-list-item>
+				<md-list-item id="vq-header-dashboard-xs-btn" class="hidden">
+					<a style="text-decoration: none;" href="/app/dashboard" target="_self">
+						<span class="blue-grey-text text-darken-1"><%- translate('HEADER_DASHBOARD') %></span>
+					</a>
+				</md-list-item>
 
-			<md-list-item class="md-1-line">
-				<a href="/impressum" target="_self"><%- translate('HOMEPAGE_FOOTER_IMPRINT') %></a>
-			</md-list-item>
+				<md-list-item id="vq-header-browse-xs-btn" class="hidden">
+					<a style="text-decoration: none;" href="/app" target="_self">
+						<span class="blue-grey-text text-darken-1"><%- translate('HEADER_LISTINGS') %></span>
+					</a>
+				</md-list-item>
 
-			<md-list-item class="md-1-line">
-				<a href="/terms" target="_self"><%- translate('HOMEPAGE_FOOTER_TERMS') %></a>
-			</md-list-item>
+				<md-list-item id="vq-header-profile-xs-btn" class="hidden">
+					<a ng-href="/app/profile/{{header.user.id}}" target="_self">
+						<%- translate('PROFILE') %>
+					</a>
+				</md-list-item>
 
-			<md-list-item class="md-1-line">
-				<a href="/privacy" target="_self"><%- translate('HOMEPAGE_FOOTER_PRIVACY') %></a>
-			</md-list-item>
+				<md-list-item id="vq-header-login-xs-btn" class="hidden">
+					<a style="text-decoration: none;" href="/app/login" target="_self">
+						<span><%- translate('LOGIN') %></span>
+					</a>
+				</md-list-item>
 
-		</md-list>
-	</md-content>
-</md-sidenav>
+				<md-list-item id="vq-header-signup-xs-btn" class="hidden">
+					<a style="text-decoration: none;" href="/app/signup" target="_self">
+						<span><%- translate('SIGNUP') %></span>
+					</a>
+				</md-list-item>
 
-<header ng-controller="headerCtrl as header" class="vq-nav" style="height:69px;">
+				<md-list-item id="vq-header-logout-xs-btn">
+					<a href="#" ng-click="header.logout()">
+						<%- translate('LOGOUT') %>
+					</a>
+				</md-list-item>	
+
+				<hr />
+
+				<% if (translate('HEADER_BUTTON_FOR_BUYERS')) { %>
+					<md-list-item class="md-1-line">
+						<a href="/" target="_self">
+							<%- translate('HEADER_BUTTON_FOR_BUYERS') %>
+						</a>
+					</md-list-item>
+				<% } %>
+
+				<md-list-item class="md-1-line">
+					<a href="/taskers" target="_self"><%- translate('HEADER_BUTTON_FOR_SELLERS') %></a>
+				</md-list-item>
+
+				<md-list-item class="md-1-line">
+					<a href="/impressum" target="_self"><%- translate('HOMEPAGE_FOOTER_IMPRINT') %></a>
+				</md-list-item>
+
+				<md-list-item class="md-1-line">
+					<a href="/terms" target="_self"><%- translate('HOMEPAGE_FOOTER_TERMS') %></a>
+				</md-list-item>
+
+				<md-list-item class="md-1-line">
+					<a href="/privacy" target="_self"><%- translate('HOMEPAGE_FOOTER_PRIVACY') %></a>
+				</md-list-item>
+
+			</md-list>
+		</md-content>
+	</md-sidenav>
 	<nav style="height:69px;">
 		<div class="nav-wrapper white" style="height:69px;">
 			<a href="/" target="_self" class="brand-logo">
