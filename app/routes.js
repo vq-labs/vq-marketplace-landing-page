@@ -125,7 +125,6 @@ const getConfigs = () => {
 		async.eachSeries(tenants, (tenantId, cb) => {
 			categoryProvider(tenantId, true);
 			appConfigProvider(tenantId, true);
-			appLabelProvider(tenantId, true);
 			postProvider(tenantId, true);
 
 			cb();
@@ -191,6 +190,19 @@ const render = (req, res, template, data) => {
 		data = data || {};
 		data.TENANT_ID = tenantId;
 		data.VQ_API_URL = CONFIG.VQ_API_URL.replace('?tenantId?', tenantId);
+
+
+		if (CONFIG.PRODUCTION) {
+			data.VQ_WEB_APP_CSS_URL =
+				'https://s3.eu-central-1.amazonaws.com/vq-marketplace/static/css/main.css';
+			data.VQ_WEB_APP_JS_URL =
+				'https://s3.eu-central-1.amazonaws.com/vq-marketplace/static/js/main.js';
+		} else {
+			data.VQ_WEB_APP_CSS_URL = 'https://s3.eu-central-1.amazonaws.com/vq-marketplace-dev/static/css/main.css';
+			data.VQ_WEB_APP_JS_URL =
+			'https://s3.eu-central-1.amazonaws.com/vq-marketplace-dev/static/js/main.js';
+		}
+		
 		data.categories = configs[0];
 		data.getConfig = fieldKey => configs[1][fieldKey];
 		data.getPost = code => configs[2][code];
