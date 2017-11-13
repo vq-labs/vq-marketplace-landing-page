@@ -125,6 +125,7 @@ const getConfigs = () => {
 		async.eachSeries(tenants, (tenantId, cb) => {
 			categoryProvider(tenantId, true);
 			appConfigProvider(tenantId, true);
+			appLabelProvider(tenantId, true);
 			postProvider(tenantId, true);
 
 			cb();
