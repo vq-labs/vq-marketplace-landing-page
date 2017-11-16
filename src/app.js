@@ -51,7 +51,7 @@ const app = angular.module("vqApp", [
   "viciauth"
 ]);
 
-app.constant("API_URL", VQ_API_URL || "@@VQ_API_URL");
+app.constant("API_URL", typeof VQ_API_URL === "undefined" ? "@@VQ_API_URL" : VQ_API_URL);
 
 // see https://stackoverflow.com/questions/16098430/angular-ie-caching-issue-for-http
 app.config($httpProvider => {
