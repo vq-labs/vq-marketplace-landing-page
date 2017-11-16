@@ -47,14 +47,19 @@ const appConfigProvider = (tenantId, forceRequest, cb) => {
 			rAppConfig.map(label => {
 				tenantData[tenantId].appConfig[label.fieldKey] = label.fieldValue;
 			});
-			
-			
-			const defaultLang = (tenantData[tenantId].appConfig["DEFAULT_LANG"] || 'en');
-			const langArr = (tenantData[tenantId].appConfig["LANGUAGES"] || '').split(",");
 
-			appLabelProvider(tenantId, false, defaultLang, () => {});
-			langArr.forEach(LANG => appLabelProvider(tenantId, false, LANG, () => {}));
-		
+			const defaultLang = (tenantData[tenantId].appConfig["DEFAULT_LANG"] || 'en');
+
+			appLabelProvider(tenantId, forceRequest, defaultLang, () => {});
+
+			const languagesString = tenantData[tenantId].appConfig["LANGUAGES"];
+
+			if (languagesString) {
+				const langArr = (tenantData[tenantId].appConfig["LANGUAGES"] || '').split(",");
+				
+				langArr.forEach(LANG => appLabelProvider(tenantId,  forceRequest, LANG, () => {}));
+			}
+			
 			return cb(null, tenantData[tenantId].appConfig);
 		});
 	}
@@ -115,9 +120,9 @@ const appLabelProvider = (tenantId, forceRequest, lang, cb) => {
 };
 
 // refresh categories and app meta every 30 seconds
-
 const getConfigs = () => {
-	vqSDK.getTenants((err, tenants) => {
+	vqSDK
+	.getTenants((err, tenants) => {
 		if (err) {
 			return console.error(err);
 		}
@@ -138,9 +143,12 @@ const getConfigs = () => {
 	
 getConfigs();
 
+/**
+ * @todo think about better way to do that as polling does not scale...
+ */
 setInterval(() => {
 	getConfigs();
-}, 30000);
+}, 30 * 100);
 
 const ResponseService = {};
 

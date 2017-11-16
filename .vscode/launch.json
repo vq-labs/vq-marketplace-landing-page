@@ -23,9 +23,9 @@
             "program": "${workspaceRoot}/server.js",
             "cwd": "${workspaceRoot}",
             "env": {
-                "VQ_TENANT_API_URL": "https://vqmarketplace.vq-labs.com/api",
-                "VQ_API_URL": "https://vq.vq-labs.com/api",
-                "TENANT_ID": "vq"
+                "VQ_TENANT_API_URL": "https://vqmarketplace.vqmarketplace.com/api",
+                "VQ_API_URL": "https://talentwand.vqmarketplace.com/api",
+                "TENANT_ID": "talentwand"
             }
         },
         {
