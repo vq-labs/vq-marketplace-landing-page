@@ -127,7 +127,13 @@ const getConfigs = () => {
 			return console.error(err);
 		}
 
-		async.eachSeries(tenants, (tenantId, cb) => {
+		async
+		.eachSeries(tenants, (tenant, cb) => {
+			tenantData[tenant.tenantId] = tenantData[tenant.tenantId] || {};
+			tenantData[tenant.tenantId].stripePublicKey = tenant.stripePublicKey;
+
+			const tenantId = tenant.tenantId;
+
 			categoryProvider(tenantId, true);
 			appConfigProvider(tenantId, true);
 			postProvider(tenantId, true);
@@ -198,7 +204,7 @@ const render = (req, res, template, data) => {
 		data = data || {};
 		data.TENANT_ID = tenantId;
 		data.VQ_API_URL = CONFIG.VQ_API_URL.replace('?tenantId?', tenantId);
-
+		data.TENANT_STRIPE_PUBLIC_KEY = tenantData[tenantId].stripePublicKey;
 
 		if (CONFIG.PRODUCTION) {
 			data.VQ_WEB_APP_CSS_URL =
