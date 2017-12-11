@@ -57,6 +57,7 @@ angular.module("viciauth",[ ])
 		
 		$window.localStorage.removeItem(LOCAL_TOKEN_KEY);
 		$window.localStorage.removeItem(LOCAL_USER_ID_KEY);
+		$window.localStorage.removeItem("VQ_USER");
 	}
 
 	const loginSignupFnFactory = loginOrSignup => postData => $q((resolve, reject) =>
