@@ -154,7 +154,7 @@ getConfigs();
  */
 setInterval(() => {
 	getConfigs();
-}, 30 * 100);
+}, 60 * 1000);
 
 const ResponseService = {};
 
