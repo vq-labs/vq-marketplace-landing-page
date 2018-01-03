@@ -56,18 +56,20 @@
                                     <li><a href="/blog"><%- translate('BLOG') %></a></li>
                                 </ul>
                             </div>
-                            <div class="col-sm-3" style="height:100%">
-                                <h5 class="st-text-white st-bold"><%- translate('HOMEPAGE_FOOTER_CATEGORIES') %></h5>
-                                <ul class="list-unstyled" style="color: white;">
-                                    <% categories.forEach(category => { %>
-                                        <li>
-                                            <a style="color: white;" href="/app/new-listing">
-                                                <%- category.label %>
-                                            </a>
-                                        </li>
-                                    <% }); %>
-                                </ul>	
-                            </div>
+                            <% if (categories.length > 0) { %>
+                                <div class="col-sm-3" style="height:100%">
+                                    <h5 class="st-text-white st-bold"><%- translate('HOMEPAGE_FOOTER_CATEGORIES') %></h5>
+                                    <ul class="list-unstyled" style="color: white;">
+                                        <% categories.forEach(category => { %>
+                                            <li>
+                                                <a style="color: white;" href="/app/new-listing">
+                                                    <%- category.label %>
+                                                </a>
+                                            </li>
+                                        <% }); %>
+                                    </ul>	
+                                </div>
+                            <% } %>
                             <div class="col-sm-3">
                                 <h5 class="st-text-white st-bold"><%- translate('HOMEPAGE_FOOTER_SOCIAL_MEDIA') %></h5>
                                 <%
@@ -84,6 +86,14 @@
                                 <% }
                                 }); %>
                             </div>
+                            <%
+                                if (
+                                    (getConfig("LANGUAGES") || '')
+                                    .split(',')
+                                    .filter(_ => _ !== '')
+                                    .length > 0
+                                ) {
+                            %>
                             <div class="col-sm-3">
                                 <%
                                         const LANG_LABELS = {
@@ -125,6 +135,9 @@
                                     %>
                                 </ul>
                             </div>
+                            <%
+                                }
+                            %>
                         </div>
                     </div>
                 </div>
