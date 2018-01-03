@@ -173,6 +173,7 @@ ResponseService.error500 = function(res){
 };
 
 const allowedDomains = {
+	"rent.kitchen": "rent-kitchen",
 	"clickforwork.hu": "click4work",
 	"talentwand.de": "talentwand",
 	"bitcoinswap.com": "bitcoinswap"

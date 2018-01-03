@@ -1,25 +1,34 @@
-<%- include('partials/how-it-works', {
-    data: [
-        {
-            icon: translate('HOW_IT_WORKS_BUYERS_STEP_1_ICON'),
-            header: translate('HOW_IT_WORKS_BUYERS_STEP_1_HEADER'),
-            desc: translate('HOW_IT_WORKS_BUYERS_STEP_1_DESC')
-        },
-        {
-            icon: translate('HOW_IT_WORKS_BUYERS_STEP_2_ICON'),
-            header: translate('HOW_IT_WORKS_BUYERS_STEP_2_HEADER'),
-            desc: translate('HOW_IT_WORKS_BUYERS_STEP_2_DESC')
-        },
-        {
-            icon: translate('HOW_IT_WORKS_BUYERS_STEP_3_ICON'),
-            header: translate('HOW_IT_WORKS_BUYERS_STEP_3_HEADER'),
-            desc: translate('HOW_IT_WORKS_BUYERS_STEP_3_DESC')
-        }
-    ]
-}) %>
+<% if (getConfig("LANDING_PAGE_DEMAND_SECTION_HOW_IT_WORKS_ENABLED") === "1") { %>
+    <%- include('partials/how-it-works', {
+        data: [
+            {
+                icon: translate('HOW_IT_WORKS_BUYERS_STEP_1_ICON'),
+                header: translate('HOW_IT_WORKS_BUYERS_STEP_1_HEADER'),
+                desc: translate('HOW_IT_WORKS_BUYERS_STEP_1_DESC')
+            },
+            {
+                icon: translate('HOW_IT_WORKS_BUYERS_STEP_2_ICON'),
+                header: translate('HOW_IT_WORKS_BUYERS_STEP_2_HEADER'),
+                desc: translate('HOW_IT_WORKS_BUYERS_STEP_2_DESC')
+            },
+            {
+                icon: translate('HOW_IT_WORKS_BUYERS_STEP_3_ICON'),
+                header: translate('HOW_IT_WORKS_BUYERS_STEP_3_HEADER'),
+                desc: translate('HOW_IT_WORKS_BUYERS_STEP_3_DESC')
+            }
+        ]
+    }) %>
+<% } %>
 
+<% if (
+    getConfig("LANDING_PAGE_DEMAND_SECTION_CATEGORIES_ENABLED") === "1" &&
+    getConfig("LANDING_PAGE_DEMAND_SECTION_HOW_IT_WORKS_ENABLED") === "1") { %>
 <hr />
+<% } %>
 
-<%- include('partials/st.categories.ejs', { userType: 1 }) %>
+<% if (getConfig("LANDING_PAGE_SECTION_CATEGORIES_ENABLED") === "1") { %>
+    <%- include('partials/st.categories.ejs', { userType: 1 }) %>
+<% } %>
+
 
 <%- getPost("LANDING_PAGE") %>
