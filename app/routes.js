@@ -220,7 +220,13 @@ const render = (req, res, template, data) => {
 		
 		data.categories = configs[0];
 		data.getConfig = fieldKey => configs[1][fieldKey];
-		data.getPost = code => configs[2][code];
+		data.getPost = (code, hideError) => {
+		  let postBody = configs[2][code];
+		  if (!postBody && (hideError !== undefined && hideError === false)) {
+		    postBody = fs.readFileSync(__dirname + "/../views/st.error.404.index.ejs", "utf8");
+	      }
+	      return postBody;
+	    };
 
 		data.translate = i18n.getFactory(
 			tenantId,
@@ -268,26 +274,28 @@ module.exports = app => {
 	 */
 	app.get("/:lang([a-zA-Z]{2})?/taskers", (req, res) => render(req, res, "index-provider.ejs"));
 
-	
+	app.get("/:lang([a-zA-Z]{2})?/:postCode", (req, res) => render(req, res, "index-post.ejs", { postCode: req.params.postCode.toLowerCase() }));
+
 	app.get("/health", (req, res) => {
 		res.send('Health OK');
 	});
 
-	/**
-	You can create pages under views/pages
-	Subfolders will be mapped to main slugs and subslags to the file names as st.<subslug>.index.ejs
+
+	/*/!*
+	* You can create pages under views/pages
+	* Subfolders will be mapped to main slugs and subslags to the file names as st.<subslug>.index.ejs
+	*!/
 
 	app.get("/:slug/:subSlug?", (req, res, next) => {
 		const slug = req.params.slug.toLowerCase();
 		const subSlug = req.params.subSlug ? req.params.subSlug.toLowerCase() : false;
-		
-		
+
+
 		return render(req, res, { slug, subSlug}, {});
 
 		return next();
-	});	
-	*/
-	
+	});	*/
+
 	app.use((req, res) => {
 		res.status(404);
 

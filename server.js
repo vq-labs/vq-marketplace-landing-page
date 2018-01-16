@@ -1,9 +1,10 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const args = require('yargs').argv;
 
 const CONFIG = require("./app/config.js");
-const port = CONFIG.PORT;
+const port = args.PORT || CONFIG.PORT;
  
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
