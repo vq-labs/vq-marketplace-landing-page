@@ -9,6 +9,7 @@ const path = require('path');
 const babel = require('gulp-babel');
 const uglify = require('gulp-uglify');
 const minify = require('gulp-minify');
+const appRoot = require('app-root-path').path;
 const fs = require('fs');
 const targetPath = 'public/stApp';
 
@@ -20,12 +21,11 @@ const generateConfig = () => {
   if (!args.env) {
     console.log("ERROR: Please provide an environment as an argument!")
   }
-
-  if(!fs.existsSync(__dirname + args.config)) {
-    console.log("Config file was not found at ", __dirname + args.config);
+  if(!fs.existsSync(path.join(appRoot, args.config))) {
+    console.log("Config file was not found at ", path.join(appRoot, args.config));
     return null;
   } else {
-   return fs.readFileSync(__dirname + args.config, "utf8");
+   return fs.readFileSync(path.join(appRoot, args.config), "utf8");
   }
 }
 

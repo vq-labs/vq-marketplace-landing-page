@@ -11,6 +11,7 @@
     "angular-material-expansion-panel": "^0.7.1",
     "angular-messages": "1.5.9",
     "angular-ui-router": "^0.4.2",
+    "app-root-path": "^2.0.1",
     "async": "^2.0.0-rc.6",
     "body-parser": "~1.14.1",
     "compression": "~1.6.0",
@@ -41,9 +42,10 @@
     "yargs": "^6.6.0"
   },
   "scripts": {
-    "start": "gulp build && node server.js",
-    "start:local-tenant": "VQ_API_URL=http://localhost:8080/api VQ_TENANT_API_URL=http://localhost:8081/api gulp build && node server.js",
-    "build": "gulp build"
+    "start": "gulp build --env production --config /../test-config.json && node server.js --env production --config /../test-config.json",
+    "start:dev": "gulp build --env development --config /../test-config.json && node server.js --env development --config /../test-config.json",
+    "start:local": "gulp build --env local --config /../test-config.json && node server.js --env local --config /../test-config.json",
+    "build": "gulp build --env production --config /../test-config.json"
   },
   "author": "VQ LABS (https://vq-labs.com)",
   "license": "MIT"

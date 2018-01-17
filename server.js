@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const appRoot = require('app-root-path').path;
 const cors = require('cors');
 const args = require('yargs').argv;
 const bodyParser = require('body-parser');
@@ -8,6 +9,8 @@ const expressLayouts = require('express-ejs-layouts');
 const compression = require('compression');
 const minify = require('express-minify');
 const http = require("http");
+const path = require("path");
+const fs = require("fs");
 const morgan = require('morgan');
 
 const generateConfig = () => {
@@ -19,11 +22,11 @@ const generateConfig = () => {
     console.log("ERROR: Please provide an environment as an argument!")
   }
 
-  if(!fs.existsSync(__dirname + args.config)) {
-    console.log("Config file was not found at ", __dirname + args.config);
+  if(!fs.existsSync(path.join(appRoot, args.config))) {
+    console.log("Config file was not found at ", path.join(appRoot, args.config));
     return null;
   } else {
-   return fs.readFileSync(__dirname + args.config, "utf8");
+   return fs.readFileSync(path.join(appRoot, args.config), "utf8");
   }
 }
 

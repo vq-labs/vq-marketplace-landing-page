@@ -1,11 +1,35 @@
 const fs = require('fs');
 const async = require("async");
-const CONFIG = require("./config.js");
+const args = require('yargs').argv;
+const appRoot = require('app-root-path').path;
 const i18n = require("./services/i18n.js");
 const path = require('path');
 const ejs = require('ejs');
 
-const vqSDK = require("./vq-sdk/index.js")(CONFIG.VQ_API_URL, CONFIG.VQ_TENANT_API_URL);
+const generateConfig = () => {
+  if (!args.config) {
+    console.log("ERROR: Please provide a config file as an argument!")
+  }
+
+  if (!args.env) {
+    console.log("ERROR: Please provide an environment as an argument!")
+  }
+
+   if(!fs.existsSync(path.join(appRoot, args.config))) {
+    console.log("Config file was not found at ", path.join(appRoot, args.config));
+    return null;
+  } else {
+   return fs.readFileSync(path.join(appRoot, args.config), "utf8");
+  }
+}
+
+if (!generateConfig()) {
+  return;
+}
+
+const config = JSON.parse(generateConfig());
+
+const vqSDK = require("./vq-sdk/index.js")(config[args.env.toUpperCase()]["VQ_MARKETPLACE_LANDING_PAGE"]["API_URL"], config[args.env.toUpperCase()]["VQ_MARKETPLACE_LANDING_PAGE"]["TENANT_API_URL"]);
 
 const LAYOUT_MATERIAL = "layouts/material-layout.ejs";
 
@@ -204,10 +228,10 @@ const render = (req, res, template, data) => {
 		
 		data = data || {};
 		data.TENANT_ID = tenantId;
-		data.VQ_API_URL = CONFIG.VQ_API_URL.replace('?tenantId?', tenantId);
+		data.VQ_API_URL = config[args.env.toUpperCase()]["VQ_MARKETPLACE_LANDING_PAGE"]["API_URL"].replace('?tenantId?', tenantId);
 		data.TENANT_STRIPE_PUBLIC_KEY = tenantData[tenantId].stripePublicKey;
 
-		if (CONFIG.PRODUCTION) {
+		if (args.env.toLowerCase() === 'production') {
 			data.VQ_WEB_APP_CSS_URL =
 				'https://s3.eu-central-1.amazonaws.com/vq-marketplace/static/css/main.css';
 			data.VQ_WEB_APP_JS_URL =
@@ -224,7 +248,7 @@ const render = (req, res, template, data) => {
 
 		data.translate = i18n.getFactory(
 			tenantId,
-			req.params.lang || req.query.lang || data.getConfig('DEFAULT_LANG') || CONFIG.DEFAULT_LANGUAGE
+			req.params.lang || req.query.lang || data.getConfig('DEFAULT_LANG') || config[args.env.toUpperCase()]["VQ_MARKETPLACE_LANDING_PAGE"]["DEFAULT_LANGUAGE"]
 		);
 		data.originalUrl = req.originalUrl;
 		data.layout = data.layout || "layouts/material-layout.ejs";
