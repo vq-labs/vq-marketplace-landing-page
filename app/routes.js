@@ -233,7 +233,7 @@ const render = (req, res, template, data) => {
 		  if (req.params.lang) {
 		    return configs[1].LANGUAGES.indexOf(req.params.lang) !== -1 ? req.params.lang : defaultLang;
       } else if (req.query.lang) {
-		    return configs[1].LANGUAGES.indexOf(req.params.lang) !== -1 ? req.params.lang : defaultLang;
+		    return configs[1].LANGUAGES.indexOf(req.query.lang) !== -1 ? req.query.lang : defaultLang;
       } else {
 		    return defaultLang;
       }
