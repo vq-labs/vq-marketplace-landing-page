@@ -1,49 +1,53 @@
 const makeVisible = id => {
-  document.getElementById(id).className =
-  document.getElementById(id).className.replace(/\bhidden\b/,'');
+  if (document.getElementById(id)) {
+    document.getElementById(id).className =
+    document.getElementById(id).className.replace(/\bhidden\b/,'');
+  }
 };
 
 const makeInvisible = id => {
-  document.getElementById(id).className =
-  document.getElementById(id).className += ' hidden';
+  if (document.getElementById(id)) {
+    document.getElementById(id).className =
+    document.getElementById(id).className += ' hidden';
+  }
 };
 
-const toogleLoggedInMenuPoints = (shouldShow, userType) => {
-  const toogle = shouldShow ? makeVisible : makeInvisible;
+const toggleLoggedInMenuPoints = (shouldShow, userType) => {
+  const toggle = shouldShow ? makeVisible : makeInvisible;
 
   if (shouldShow && userType === 1) {
-    toogle("vq-header-new-listing-btn");
-    toogle("vq-header-new-listing-xs-btn");
+    toggle("vq-header-buyer-btn");
+    toggle("vq-header-browse-btn");
   }
 
   if (shouldShow && userType === 2) {
-    toogle("vq-header-browse-btn");
-    toogle("vq-header-browse-xs-btn");
+    toggle("vq-header-new-listing-btn");
+    toggle("vq-header-new-listing-xs-btn");
+    toggle("vq-header-user-landing-page-btn");
+    toggle("vq-header-service-provider-landing-page-btn");
   }
   
   if (!shouldShow) {
-    toogle("vq-header-new-listing-btn");
-    toogle("vq-header-new-listing-xs-btn");
-    toogle("vq-header-browse-btn");
-    toogle("vq-header-browse-xs-btn");
+    toggle("vq-header-new-listing-btn");
+    toggle("vq-header-new-listing-xs-btn");
+    toggle("vq-header-browse-btn");
+    toggle("vq-header-browse-xs-btn");
   }
-
-  toogle("vq-header-dashboard-btn");
-  toogle("vq-header-dashboard-xs-btn");
+  toggle("vq-header-dashboard-btn");
+  toggle("vq-header-dashboard-xs-btn");
   
-  
-  toogle("vq-header-logout-xs-btn");
-  toogle("vq-profile-btn");
-  toogle("vq-header-profile-xs-btn");
+  toggle("vq-header-logout-xs-btn");
+  toggle("vq-profile-btn");
+  toggle("vq-header-profile-xs-btn");
 };
 
-const toogleLoggedOutMenuPoints = (shouldShow) => {
-  const toogle = shouldShow ? makeVisible : makeInvisible;
+const toggleLoggedOutMenuPoints = (shouldShow) => {
+  const toggle = shouldShow ? makeVisible : makeInvisible;
 
-  toogle("vq-header-login-xs-btn");
-  toogle("vq-header-signup-xs-btn");
-  toogle("vq-header-login-btn");
-  toogle("vq-header-signup-btn");
+  toggle("vq-header-login-xs-btn");
+  toggle("vq-header-signup-xs-btn");
+  toggle("vq-header-login-btn");
+  toggle("vq-header-signup-btn");
 };
 
 const app = angular.module("vqApp", [
@@ -88,12 +92,12 @@ app.run((ViciAuth, API_URL) => {
 
     ViciAuth
     .me(user => {
-      toogleLoggedInMenuPoints(true, user.userType);
+      toggleLoggedInMenuPoints(true, user.userType);
 
       makeVisible("vq-body");
     }, err => {
-      toogleLoggedOutMenuPoints(true);
-      toogleLoggedInMenuPoints(false);
+      toggleLoggedOutMenuPoints(true);
+      toggleLoggedInMenuPoints(false);
 
       makeVisible("vq-body");
 
@@ -108,8 +112,8 @@ app.controller('headerCtrl', function(ViciAuth, $mdMenu, $mdSidenav) {
   header.toggleLeft = () => $mdSidenav('left').toggle();
 
 	header.logout = () => {
-    toogleLoggedInMenuPoints(false);
-    toogleLoggedOutMenuPoints(true);
+    toggleLoggedInMenuPoints(false);
+    toggleLoggedOutMenuPoints(true);
 
 	  header.user = null;
 	  

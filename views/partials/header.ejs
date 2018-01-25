@@ -46,15 +46,14 @@
 
 				<hr />
 
-				<% if (translate('HEADER_BUTTON_FOR_BUYERS')) { %>
-					<md-list-item class="md-1-line">
-						<a href="/" target="_self">
-							<%- translate('HEADER_BUTTON_FOR_BUYERS') %>
-						</a>
-					</md-list-item>
-				<% } %>
 
-				<md-list-item class="md-1-line">
+                <md-list-item id="vq-header-buyer-btn" class="md-1-line">
+                    <a href="/" target="_self">
+                        <%- translate('HEADER_BUTTON_FOR_BUYERS') %>
+                    </a>
+                </md-list-item>
+
+				<md-list-item id="vq-header-seller-btn" class="md-1-line">
 					<a href="/taskers" target="_self"><%- translate('HEADER_BUTTON_FOR_SELLERS') %></a>
 				</md-list-item>
 
@@ -82,31 +81,31 @@
 				<i class="material-icons">menu</i>
 			</div>
 			<ul id="nav-mobile" class="right hide-on-med-and-down">
-				<% if ((originalUrl.split('?')[0] === '/' || originalUrl.split('?')[0].length === 3) && translate('HEADER_BUTTON_FOR_SELLERS')) { %>
-					<li id="vq-header-user-landing-page-btn">
+				<% if ((originalUrl.split('?')[0] === '/' || originalUrl.split('?')[0].length === 3)) { %>
+					<li id="vq-header-user-landing-page-btn" class="hidden">
 						<a href="/taskers" target="_self">
 							<span class="btn st-text-white" style="background-color: <%- getConfig('COLOR_PRIMARY') %>"><%- translate('HEADER_BUTTON_FOR_SELLERS') %></span>
 						</a>
 					</li>
 				<% } %>
 
-				<% if ((originalUrl.split('?')[0] === '/taskers' || (originalUrl.split('/')[1].length === 2 && originalUrl.split('/')[2] === 'taskers')) && translate('HEADER_BUTTON_FOR_BUYERS')) { %>
-					<li id="vq-header-service-provider-landing-page-btn">
+				<% if ((originalUrl.split('?')[0] === '/taskers' || (originalUrl.split('/')[1].length === 2 && originalUrl.split('/')[2] === 'taskers'))) { %>
+					<li id="vq-header-service-provider-landing-page-btn" class="hidden">
 						<a href="/" target="_self">
 							<span class="btn st-text-white" style="background-color: <%- getConfig('COLOR_PRIMARY') %>"><%- translate('HEADER_BUTTON_FOR_BUYERS') %></span>
 						</a>
 					</li>
 				<% } %>
-                
-				<li id="vq-header-new-listing-btn" class="hidden">
-					<a style="text-decoration: none;" href="/app/new-listing" target="_self">
-						<span class="blue-grey-text text-darken-1"><%- translate('HEADER_ADD_LISTING') %></span>
-					</a>
-				</li>
 
 				<li id="vq-header-dashboard-btn" class="hidden">
 					<a style="text-decoration: none;" href="/app/dashboard" target="_self">
 						<span class="blue-grey-text text-darken-1"><%- translate('HEADER_DASHBOARD') %></span>
+					</a>
+				</li>
+
+                <li id="vq-header-new-listing-btn" class="hidden">
+					<a style="text-decoration: none;" href="/app/new-listing" target="_self">
+						<span class="blue-grey-text text-darken-1"><%- translate('HEADER_ADD_LISTING') %></span>
 					</a>
 				</li>
 

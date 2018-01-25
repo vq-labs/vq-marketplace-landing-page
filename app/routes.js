@@ -180,7 +180,7 @@ const allowedDomains = {
 };
 
 const render = (req, res, template, data) => {
-	let tenantId = process.env.TENANT_ID || req.subdomains[req.subdomains.length - 1];
+	let tenantId = 'rental-kitchen' || req.subdomains[req.subdomains.length - 1];
 
 	if (!tenantId) {
 		tenantId = allowedDomains[req.hostname];
