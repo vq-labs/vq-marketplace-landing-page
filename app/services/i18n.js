@@ -13,7 +13,7 @@ const setLabel = (tenantId, lang, fieldKey, fieldValue) => {
 
 const getFactory = (tenantId, lang) => {
     try {
-        return fieldKey => dictionary[tenantId][lang || 'en'][fieldKey];
+        return fieldKey => dictionary[tenantId][lang][fieldKey] || dictionary[tenantId]["en"][fieldKey];
     } catch (err) {
         return fieldKey => fieldKey;
     }

@@ -1,35 +1,10 @@
-const fs = require('fs');
 const async = require("async");
-const args = require('yargs').argv;
-const appRoot = require('app-root-path').path;
 const i18n = require("./services/i18n.js");
-const path = require('path');
 const ejs = require('ejs');
 
-const generateConfig = () => {
-  if (!args.config) {
-    console.log("ERROR: Please provide a config file as an argument!")
-  }
 
-  if (!args.env) {
-    console.log("ERROR: Please provide an environment as an argument!")
-  }
-
-   if(!fs.existsSync(path.join(appRoot, args.config))) {
-    console.log("Config file was not found at ", path.join(appRoot, args.config));
-    return null;
-  } else {
-   return fs.readFileSync(path.join(appRoot, args.config), "utf8");
-  }
-}
-
-if (!generateConfig()) {
-  return;
-}
-
-const config = JSON.parse(generateConfig());
-
-const vqSDK = require("./vq-sdk/index.js")(config[args.env.toUpperCase()]["VQ_MARKETPLACE_LANDING_PAGE"]["API_URL"], config[args.env.toUpperCase()]["VQ_MARKETPLACE_LANDING_PAGE"]["TENANT_API_URL"]);
+const vqSDK = require("./vq-sdk/index.js");
+const routeProvider = vqSDK.routeProvider();
 
 const LAYOUT_MATERIAL = "layouts/material-layout.ejs";
 
@@ -41,7 +16,7 @@ const categoryProvider = (tenantId, forceRequest, cb) => {
 	tenantData[tenantId] = tenantData[tenantId] || {};
 
 	if (!tenantData[tenantId].categories || forceRequest) {
-		vqSDK.getCategories(tenantId, (err, rCategories) => {
+		routeProvider.getCategories(tenantId, (err, rCategories) => {
 			if (err) {
 				return cb(err);
 			}
@@ -61,7 +36,7 @@ const appConfigProvider = (tenantId, forceRequest, cb) => {
 	tenantData[tenantId] = tenantData[tenantId] || {};
 
 	if (!tenantData[tenantId].appConfig || forceRequest) {
-		return vqSDK.getAppConfig(tenantId, (err, rAppConfig) => {
+		return routeProvider.getAppConfig(tenantId, (err, rAppConfig) => {
 			if (err) {
 				return cb(err);
 			}
@@ -71,10 +46,6 @@ const appConfigProvider = (tenantId, forceRequest, cb) => {
 			rAppConfig.map(label => {
 				tenantData[tenantId].appConfig[label.fieldKey] = label.fieldValue;
 			});
-
-			const defaultLang = (tenantData[tenantId].appConfig["DEFAULT_LANG"] || 'en');
-
-			appLabelProvider(tenantId, forceRequest, defaultLang, () => {});
 
 			const languagesString = tenantData[tenantId].appConfig["LANGUAGES"];
 
@@ -97,7 +68,7 @@ const postProvider = (tenantId, forceRequest, cb) => {
 	tenantData[tenantId] = tenantData[tenantId] || {};
 
 	if (!tenantData[tenantId].posts || forceRequest) {
-		return vqSDK.getPosts(tenantId, (err, rPosts) => {
+		return routeProvider.getPosts(tenantId, (err, rPosts) => {
 			if (err) {
 				return cb(err);
 			}
@@ -121,9 +92,8 @@ const appLabelProvider = (tenantId, forceRequest, lang, cb) => {
 
 	tenantData[tenantId] = tenantData[tenantId] || {};
 	tenantData[tenantId].appLabels = tenantData[tenantId].appLabels || {};
-
 	if (!tenantData[tenantId].appLabels[lang] || forceRequest) {
-		return vqSDK.getAppLabels(tenantId, lang, (err, rLabels) => {
+		return routeProvider.getAppLabels(tenantId, lang, (err, rLabels) => {
 			if (err) {
 				return cb(err);
 			}
@@ -145,7 +115,7 @@ const appLabelProvider = (tenantId, forceRequest, lang, cb) => {
 
 // refresh categories and app meta every 30 seconds
 const getConfigs = () => {
-	vqSDK
+	routeProvider
 	.getTenants((err, tenants) => {
 		if (err) {
 			return console.error(err);
@@ -228,10 +198,10 @@ const render = (req, res, template, data) => {
 		
 		data = data || {};
 		data.TENANT_ID = tenantId;
-		data.VQ_API_URL = config[args.env.toUpperCase()]["VQ_MARKETPLACE_LANDING_PAGE"]["API_URL"].replace('?tenantId?', tenantId);
+		data.VQ_API_URL = process.env.API_URL.replace('?tenantId?', tenantId);
 		data.TENANT_STRIPE_PUBLIC_KEY = tenantData[tenantId].stripePublicKey;
 
-		if (args.env.toLowerCase() === 'production') {
+		if (process.env.ENV.toLowerCase() === 'production') {
 			data.VQ_WEB_APP_CSS_URL =
 				'https://s3.eu-central-1.amazonaws.com/vq-marketplace/static/css/main.css';
 			data.VQ_WEB_APP_JS_URL =
@@ -246,13 +216,25 @@ const render = (req, res, template, data) => {
 		data.getConfig = fieldKey => configs[1][fieldKey];
 		data.getPost = code => configs[2][code];
 
+		// set language
+    const getLang = () => {
+		  const defaultLang = data.getConfig('DEFAULT_LANG') || 'en';
+		  if (req.params.lang) {
+		    return configs[1].LANGUAGES.indexOf(req.params.lang) !== -1 ? req.params.lang : defaultLang;
+      } else if (req.query.lang) {
+		    return configs[1].LANGUAGES.indexOf(req.query.lang) !== -1 ? req.query.lang : defaultLang;
+      } else {
+		    return defaultLang;
+      }
+    };
+
 		data.translate = i18n.getFactory(
 			tenantId,
-			req.params.lang || req.query.lang || data.getConfig('DEFAULT_LANG') || config[args.env.toUpperCase()]["VQ_MARKETPLACE_LANDING_PAGE"]["DEFAULT_LANGUAGE"]
+			getLang()
 		);
 		data.originalUrl = req.originalUrl;
 		data.layout = data.layout || "layouts/material-layout.ejs";
-		data.lang = req.query.lang || 'en';
+		data.lang = getLang();
 
 		return res.render(template, data);
 		/**

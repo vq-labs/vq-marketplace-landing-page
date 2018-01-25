@@ -8,9 +8,9 @@ const API_PATHS = {
    POST: "/post"
 };
 
-module.exports = (VQ_API_URL, VQ_TENANT_API_URL) => {
-    VQ_TENANT_API_URL = VQ_TENANT_API_URL || "http://localhost:8081/api";
-    VQ_API_URL = VQ_API_URL || "http://localhost:8080/api";
+const routeProvider = () => {
+    const VQ_API_URL = process.env.API_URL;
+    const VQ_TENANT_API_URL = process.env.TENANT_API_URL;
 
     return {
         getPosts,
@@ -110,6 +110,10 @@ module.exports = (VQ_API_URL, VQ_TENANT_API_URL) => {
        }
 
     }
-     
-};
+
+}
+
+module.exports = {
+  routeProvider
+}
 

@@ -1,39 +1,35 @@
 'use strict';
+require('dotenv').config();
+
 const ngAnnotate = require('gulp-ng-annotate');
 const replace = require('gulp-replace-task');
-const args = require('yargs').argv;
 const gulp = require('gulp');
 const spawn = require('child_process').spawn;
 const del = require('del');
-const path = require('path');
 const babel = require('gulp-babel');
 const uglify = require('gulp-uglify');
 const minify = require('gulp-minify');
-const appRoot = require('app-root-path').path;
-const fs = require('fs');
+const runSequence = require('run-sequence');
 const targetPath = 'public/stApp';
 
-const generateConfig = () => {
-  if (!args.config) {
-    console.log("ERROR: Please provide a config file as an argument!")
-  }
+gulp.task('watch', () => gulp.watch('./src/**/**',  [ 'build' ]));
 
-  if (!args.env) {
-    console.log("ERROR: Please provide an environment as an argument!")
-  }
-  if(!fs.existsSync(path.join(appRoot, args.config))) {
-    console.log("Config file was not found at ", path.join(appRoot, args.config));
-    return null;
+gulp.task('run', function(cb) {
+  if (process.env.ENV.toLowerCase() === 'production') {
+        runSequence(
+        'clean',
+        'build',
+        cb
+    );
   } else {
-   return fs.readFileSync(path.join(appRoot, args.config), "utf8");
+        runSequence(
+        'clean',
+        'build',
+        'watch',
+        cb
+    );
   }
-}
-
-if (!generateConfig()) {
-  return;
-}
-
-const config = JSON.parse(generateConfig());
+});
 
 gulp.task('clean', () => del([ `${targetPath}/**` ]));
 
@@ -53,14 +49,14 @@ gulp.task('deploy', [ "build" ], () => {
   });
 });
 
-gulp.task('build', [ "clean" ], () => {
+gulp.task('build', () => {
   const client = gulp
    .src('src/**/*.js')
     .pipe(replace({
       patterns: [
         {
           match: 'VQ_API_URL',
-          replacement: config[args.env.toUpperCase()]["VQ_MARKETPLACE_LANDING_PAGE"]["API_URL"]
+          replacement: process.env.API_URL
         }
       ]
     }))
