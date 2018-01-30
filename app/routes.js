@@ -97,7 +97,6 @@ const appLabelProvider = (tenantId, forceRequest, lang, cb) => {
 
 	tenantData[tenantId] = tenantData[tenantId] || {};
 	tenantData[tenantId].appLabels = tenantData[tenantId].appLabels || {};
-
 	if (!tenantData[tenantId].appLabels[lang] || forceRequest) {
 		return vqSDK.getAppLabels(tenantId, lang, (err, rLabels) => {
 			if (err) {
@@ -222,19 +221,30 @@ const render = (req, res, template, data) => {
 		data.getConfig = fieldKey => configs[1][fieldKey];
 		data.getPost = (code, hideError) => {
 		  let postBody = configs[2][code];
+
 		  if (!postBody && (hideError !== undefined && hideError === false)) {
 		    postBody = fs.readFileSync(__dirname + "/../views/st.error.404.index.ejs", "utf8");
 	      }
 	      return postBody;
 	    };
 
+		const getLang = () => {
+		  const defaultLang = data.getConfig('DEFAULT_LANG') || CONFIG.DEFAULT_LANGUAGE;
+		  if (req.params.lang) {
+		    return configs[1].LANGUAGES.indexOf(req.params.lang) !== -1 ? req.params.lang : defaultLang;
+      } else if (req.query.lang) {
+		    return configs[1].LANGUAGES.indexOf(req.query.lang) !== -1 ? req.query.lang : defaultLang;
+      } else {
+		    return defaultLang;
+      }
+    };
 		data.translate = i18n.getFactory(
 			tenantId,
-			req.params.lang || req.query.lang || data.getConfig('DEFAULT_LANG') || CONFIG.DEFAULT_LANGUAGE
+			getLang()
 		);
 		data.originalUrl = req.originalUrl;
 		data.layout = data.layout || "layouts/material-layout.ejs";
-		data.lang = req.query.lang || 'en';
+		data.lang = getLang();
 
 		return res.render(template, data);
 		/**
