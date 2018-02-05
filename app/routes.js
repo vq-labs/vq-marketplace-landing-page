@@ -92,6 +92,31 @@ const postProvider = (tenantId, forceRequest, cb) => {
 	return cb(null, tenantData[tenantId].posts);
 };
 
+const taskProvider = (tenantId, originalUrl, forceRequest, cb) => {
+  cb = cb || function() {};
+  if (originalUrl.includes('/app/task/')) {
+		  const taskId = originalUrl.replace('/app/task/', '');
+
+		  let taskRef = {};
+
+      if (forceRequest) {
+        return vqSDK.getTask(tenantId, taskId, (err, rTask) => {
+          console.log('rtask', rTask)
+          if (err) {
+            return cb(err);
+          }
+
+          taskRef = rTask;
+
+          return cb(null, taskRef);
+        });
+      }
+
+      return cb(null, taskRef);
+  }
+	return cb(null);
+};
+
 const appLabelProvider = (tenantId, forceRequest, lang, cb) => {
 	cb = cb || function() {};
 
@@ -180,7 +205,7 @@ const allowedDomains = {
 };
 
 const render = (req, res, template, data) => {
-	let tenantId = process.env.TENANT_ID || req.subdomains[req.subdomains.length - 1];
+	let tenantId = 'sercan' || req.subdomains[req.subdomains.length - 1];
 
 	if (!tenantId) {
 		tenantId = allowedDomains[req.hostname];
@@ -194,7 +219,8 @@ const render = (req, res, template, data) => {
 	async.parallel([
 		cb => categoryProvider(tenantId, false, cb),
 		cb => appConfigProvider(tenantId, false, cb),
-		cb => postProvider(tenantId, false, cb)
+		cb => postProvider(tenantId, false, cb),
+		cb => taskProvider(tenantId, req.originalUrl, true, cb),
 	], (err, configs) => {
 		if (err) {
 			if (!configs[0] || !configs[1]) {
@@ -221,12 +247,17 @@ const render = (req, res, template, data) => {
 		data.categories = configs[0];
 		data.getConfig = fieldKey => configs[1][fieldKey];
 		data.getPost = code => configs[2][code];
+		data.getTask = () => configs[3] === undefined ? undefined : configs[3];
+		data.stripHTML = (html) => {
+       return html.replace(/<(?:.|\n)*?>/gm, '')
+    }
 
 		data.translate = i18n.getFactory(
 			tenantId,
 			req.params.lang || req.query.lang || data.getConfig('DEFAULT_LANG') || CONFIG.DEFAULT_LANGUAGE
 		);
 		data.originalUrl = req.originalUrl;
+
 		data.layout = data.layout || "layouts/material-layout.ejs";
 		data.lang = req.query.lang || 'en';
 

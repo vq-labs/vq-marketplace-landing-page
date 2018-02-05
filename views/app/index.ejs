@@ -11,13 +11,25 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css"/>
         <link href="<%- VQ_WEB_APP_CSS_URL %>" rel="stylesheet">
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDtfJPLOpDhjpw4Omrg7QoPfXXY59wf5rY&libraries=places"></script>
-        
-        <title><%- getConfig('SEO_TITLE') %></title>
-        <meta name="description" content="<%- getConfig('SEO_DESCRIPTION') %>" />
-        <meta property="og:title" content="<%- getConfig('SEO_TITLE') %>" />
-        <meta property="og:type" content="website" />
-        <meta property="og:image" content="<%- getConfig('SEO_IMAGE') %>" />
-        <meta property="og:description" content="<%- getConfig('SEO_DESCRIPTION') %>" />
+
+        <% if (typeof getTask() !== 'undefined') { %>
+            <title><%- getTask().title + ' - ' + getConfig('SEO_TITLE') %></title>
+            <meta name="description" content="<%- stripHTML(getTask().description) + ' | ' + getConfig('SEO_DESCRIPTION') %>" />
+            <meta name="keywords" content="<%- getConfig('SEO_KEYWORDS') %>">
+            <meta property="og:title" content="<%- getTask().title + ' - ' + getConfig('SEO_TITLE') %>" />
+            <meta property="og:type" content="website" />
+            <meta property="og:image" content="<%- getTask().images.length > 0 ? getTask().images[0].imageUrl : getConfig('SEO_IMAGE') %>" />
+            <meta property="og:description" content="<%- stripHTML(getTask().description) + ' | ' + getConfig('SEO_DESCRIPTION') %>" />
+        <% } else { %>
+            <title><%- getConfig('SEO_TITLE') %></title>
+            <meta name="description" content="<%- getConfig('SEO_DESCRIPTION') %>" />
+            <meta name="keywords" content="<%- getConfig('SEO_KEYWORDS') %>">
+            <meta property="og:title" content="<%- getConfig('SEO_TITLE') %>" />
+            <meta property="og:type" content="website" />
+            <meta property="og:image" content="<%- getConfig('SEO_IMAGE') %>" />
+            <meta property="og:description" content="<%- getConfig('SEO_DESCRIPTION') %>" />
+        <% } %>
+
     </head>
     <body>
         <div id="root"></div>
