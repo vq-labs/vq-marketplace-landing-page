@@ -171,8 +171,9 @@ ResponseService.error500 = function(res){
 	});
 };
 
+// this should be part of the external config
 const allowedDomains = {
-	"rent.kitchen": "rent-kitchen",
+	"rent.kitchen": "rental-kitchen",
 	"clickforwork.hu": "click4work",
 	"talentwand.de": "talentwand",
 	"bitcoinswap.com": "bitcoinswap"
