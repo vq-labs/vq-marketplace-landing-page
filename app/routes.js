@@ -249,8 +249,8 @@ const render = (req, res, template, data) => {
 		data.getPost = code => configs[2][code];
 		data.getTask = () => configs[3] === undefined ? undefined : configs[3];
 		data.stripHTML = (html) => {
-       return html.replace(/<(?:.|\n)*?>/gm, '')
-    }
+			return html.replace(/<(?:.|\n)*?>/gm, '')
+		}
 
 		data.translate = i18n.getFactory(
 			tenantId,
@@ -297,7 +297,7 @@ module.exports = app => {
 	/**
 	 * Landing page for Sellers / Taskers (userType: 2)
 	 */
-	app.get("/:lang([a-zA-Z]{2})?/taskers", (req, res) => render(req, res, "index-provider.ejs"));
+	app.get("/:lang([a-zA-Z]{2})?/:supplySideSlug", (req, res) => render(req, res, "index-provider.ejs"));
 
 	
 	app.get("/health", (req, res) => {

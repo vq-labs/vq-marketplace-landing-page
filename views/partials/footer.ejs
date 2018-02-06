@@ -10,7 +10,7 @@
                                         <a style="color: white;" href="/"><%- translate('HEADER_BUTTON_FOR_BUYERS') %></a>
                                     </li>
                                     <li>
-                                        <a style="color: white;" href="/taskers"><%- translate('HEADER_BUTTON_FOR_SELLERS') %></a>
+                                        <a style="color: white;" href="/<%-getConfig('LANDING_PAGE_HEADER_BUTTON_TEXT_FOR_SELLERS') || 'taskers' %>"><%- translate('HEADER_BUTTON_FOR_SELLERS') %></a>
                                     </li>
                                     <li>
                                         <a style="color: white;" href="/app/privacy"><%- translate('HOMEPAGE_FOOTER_PRIVACY') %></a>
@@ -59,7 +59,9 @@
                             <div class="col-sm-3" style="height:100%">
                                 <h5 class="st-text-white st-bold"><%- translate('HOMEPAGE_FOOTER_CATEGORIES') %></h5>
                                 <ul class="list-unstyled" style="color: white;">
-                                    <% categories.forEach(category => { %>
+                                    <% categories
+                                        .filter(category => Number(category.status) === 0)
+                                        .forEach(category => { %>
                                         <li>
                                             <a style="color: white;" href="/app/new-listing">
                                                 <%- category.label %>

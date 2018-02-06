@@ -201,7 +201,7 @@
   </div>
 <% } %>
 
-<% if (originalUrl.split('?')[0] === '/taskers' || (originalUrl.split('/')[1].length === 2 && originalUrl.split('/')[2] === 'taskers')) { %> 
+<% if (originalUrl.split('?')[0] === '/' + (getConfig('LANDING_PAGE_HEADER_BUTTON_TEXT_FOR_SELLERS') || 'taskers') || (originalUrl.split('/')[1].length === 2 && originalUrl.split('/')[2] === (getConfig('LANDING_PAGE_HEADER_BUTTON_TEXT_FOR_SELLERS') || 'taskers') )) { %> 
     <div class="vq-welcome vq-welcome-user-type-2">
     <div class="vq-bg-half-transparent" style="position:relative; left:0; z-index: 1; width:100%; height:100%; overflow:hidden;">
             <div class="row vq-welcome-intro" style="position:relative;margin-top:70px;">
