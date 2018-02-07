@@ -152,7 +152,7 @@
 <% } %>  
 
 <% if (originalUrl.split('?')[0] === '/' || originalUrl.split('?')[0].length === 3) { %> 
-<div class="vq-welcome vq-welcome-user-type-1">
+<div class="vq-welcome vq-welcome-user-type-1" style="padding-top: 69px;">
     <div class="vq-bg-half-transparent" style="position:relative; left:0; z-index: 1; width:100%; height:100%; overflow:hidden;">
           <div class="row vq-welcome-intro">
               <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center">      
@@ -201,7 +201,7 @@
 <% } %>
 
 <% if (originalUrl.split('?')[0] === '/' + (getConfig('LANDING_PAGE_HEADER_BUTTON_TEXT_FOR_SELLERS') || 'taskers') || (originalUrl.split('/')[1].length === 2 && originalUrl.split('/')[2] === (getConfig('LANDING_PAGE_HEADER_BUTTON_TEXT_FOR_SELLERS') || 'taskers') )) { %> 
-    <div class="vq-welcome vq-welcome-user-type-2">
+    <div class="vq-welcome vq-welcome-user-type-2" style="padding-top: 69px;">
     <div class="vq-bg-half-transparent" style="position:relative; left:0; z-index: 1; width:100%; height:100%; overflow:hidden;">
             <div class="row vq-welcome-intro" style="position:relative;margin-top:70px;">
                <div class="col-xs-12 text-center">   
@@ -252,7 +252,7 @@
   	<%- body %>
   </div>	
     
-  <div class="container-fluid">  
+  <div class="container-fluid" style="padding: 0px !important">  
 	  <% include ../partials/footer %>   
   </div>
 
