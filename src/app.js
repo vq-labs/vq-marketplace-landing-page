@@ -159,11 +159,13 @@ app.controller('taskAutoCompleteCtrl', function($timeout, $http, $q, $log) {
     }
 
     function selectedItemChange(item) {
+      window.location.replace("/app/new-listing?category=" + item.code + "&utm_source=homepage")
       $log.info('Item changed to ' + JSON.stringify(item));
     }
 
     function loadAll() {
-        var categories = stCategories.map(function(item) {
+      console.log(stCategories)
+        var categories = stCategories.filter(category => Number(category.status) === 0).map(function(item) {
         return {
           img: item.imageUrl,
           code: item.code,
