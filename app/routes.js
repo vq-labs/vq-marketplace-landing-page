@@ -252,18 +252,22 @@ const render = (req, res, template, data) => {
 		    postBody = fs.readFileSync(__dirname + "/../views/st.error.404.index.ejs", "utf8");
 	      }
 	      return postBody;
-	    };
+		};
+		data.getTask = () => configs[3] === undefined ? undefined : configs[3];
+		data.stripHTML = (html) => {
+			return html.replace(/<(?:.|\n)*?>/gm, '')
+		}
 
 		const getLang = () => {
-		  const defaultLang = data.getConfig('DEFAULT_LANG') || CONFIG.DEFAULT_LANGUAGE;
-		  if (req.params.lang) {
-		    return configs[1].LANGUAGES.indexOf(req.params.lang) !== -1 ? req.params.lang : defaultLang;
-      } else if (req.query.lang) {
-		    return configs[1].LANGUAGES.indexOf(req.query.lang) !== -1 ? req.query.lang : defaultLang;
-      } else {
-		    return defaultLang;
-      }
-    };
+		const defaultLang = data.getConfig('DEFAULT_LANG') || CONFIG.DEFAULT_LANGUAGE;
+			if (req.params.lang) {
+				return configs[1].LANGUAGES.indexOf(req.params.lang) !== -1 ? req.params.lang : defaultLang;
+			} else if (req.query.lang) {
+				return configs[1].LANGUAGES.indexOf(req.query.lang) !== -1 ? req.query.lang : defaultLang;
+			} else {
+				return defaultLang;
+			}
+		};
 		data.translate = i18n.getFactory(
 			tenantId,
 			getLang()
