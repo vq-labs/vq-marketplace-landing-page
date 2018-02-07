@@ -164,7 +164,6 @@ app.controller('taskAutoCompleteCtrl', function($timeout, $http, $q, $log) {
     }
 
     function loadAll() {
-      console.log(stCategories)
         var categories = stCategories.filter(category => Number(category.status) === 0).map(function(item) {
         return {
           img: item.imageUrl,

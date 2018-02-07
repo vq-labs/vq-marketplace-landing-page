@@ -101,7 +101,6 @@ const taskProvider = (tenantId, originalUrl, forceRequest, cb) => {
 
       if (forceRequest) {
         return vqSDK.getTask(tenantId, taskId, (err, rTask) => {
-          console.log('rtask', rTask)
           if (err) {
             return cb(err);
           }
