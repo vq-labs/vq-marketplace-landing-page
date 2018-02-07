@@ -9,13 +9,4 @@ CONFIG.VQ_TENANT_API_URL = process.env.VQ_TENANT_API_URL || "http://localhost:80
 CONFIG.VQ_APP_URL = process.env.VQ_APP_URL || "http://localhost:3000";
 CONFIG.PORT = process.env.PORT || 4000;
 
-console.log(CONFIG);
-
 module.exports = CONFIG;
-
-
-
-
-    
-    
-

@@ -121,7 +121,6 @@ const appLabelProvider = (tenantId, forceRequest, lang, cb) => {
 
 	tenantData[tenantId] = tenantData[tenantId] || {};
 	tenantData[tenantId].appLabels = tenantData[tenantId].appLabels || {};
-
 	if (!tenantData[tenantId].appLabels[lang] || forceRequest) {
 		return vqSDK.getAppLabels(tenantId, lang, (err, rLabels) => {
 			if (err) {
@@ -196,15 +195,16 @@ ResponseService.error500 = function(res){
 	});
 };
 
+// this should be part of the external config
 const allowedDomains = {
-	"rent.kitchen": "rent-kitchen",
+	"rent.kitchen": "rental-kitchen",
 	"clickforwork.hu": "click4work",
 	"talentwand.de": "talentwand",
 	"bitcoinswap.com": "bitcoinswap"
 };
 
 const render = (req, res, template, data) => {
-	let tenantId = 'sercan' || req.subdomains[req.subdomains.length - 1];
+	let tenantId = process.env.TENANT_ID || req.subdomains[req.subdomains.length - 1];
 
 	if (!tenantId) {
 		tenantId = allowedDomains[req.hostname];
@@ -245,20 +245,33 @@ const render = (req, res, template, data) => {
 		
 		data.categories = configs[0];
 		data.getConfig = fieldKey => configs[1][fieldKey];
-		data.getPost = code => configs[2][code];
-		data.getTask = () => configs[3] === undefined ? undefined : configs[3];
-		data.stripHTML = (html) => {
-			return html.replace(/<(?:.|\n)*?>/gm, '')
-		}
+		data.getPost = (code, hideError) => {
+		  let postBody = configs[2][code];
 
+		  if (!postBody && (hideError !== undefined && hideError === false)) {
+		    postBody = fs.readFileSync(__dirname + "/../views/st.error.404.index.ejs", "utf8");
+	      }
+	      return postBody;
+	    };
+
+		const getLang = () => {
+		  const defaultLang = data.getConfig('DEFAULT_LANG') || CONFIG.DEFAULT_LANGUAGE;
+		  if (req.params.lang) {
+		    return configs[1].LANGUAGES.indexOf(req.params.lang) !== -1 ? req.params.lang : defaultLang;
+      } else if (req.query.lang) {
+		    return configs[1].LANGUAGES.indexOf(req.query.lang) !== -1 ? req.query.lang : defaultLang;
+      } else {
+		    return defaultLang;
+      }
+    };
 		data.translate = i18n.getFactory(
 			tenantId,
-			req.params.lang || req.query.lang || data.getConfig('DEFAULT_LANG') || CONFIG.DEFAULT_LANGUAGE
+			getLang()
 		);
 		data.originalUrl = req.originalUrl;
 
 		data.layout = data.layout || "layouts/material-layout.ejs";
-		data.lang = req.query.lang || 'en';
+		data.lang = getLang();
 
 		return res.render(template, data);
 		/**
@@ -298,26 +311,28 @@ module.exports = app => {
 	 */
 	app.get("/:lang([a-zA-Z]{2})?/:supplySideSlug", (req, res) => render(req, res, "index-provider.ejs"));
 
-	
+	app.get("/:lang([a-zA-Z]{2})?/:postCode", (req, res) => render(req, res, "index-post.ejs", { postCode: req.params.postCode.toLowerCase() }));
+
 	app.get("/health", (req, res) => {
 		res.send('Health OK');
 	});
 
-	/**
-	You can create pages under views/pages
-	Subfolders will be mapped to main slugs and subslags to the file names as st.<subslug>.index.ejs
+
+	/*/!*
+	* You can create pages under views/pages
+	* Subfolders will be mapped to main slugs and subslags to the file names as st.<subslug>.index.ejs
+	*!/
 
 	app.get("/:slug/:subSlug?", (req, res, next) => {
 		const slug = req.params.slug.toLowerCase();
 		const subSlug = req.params.subSlug ? req.params.subSlug.toLowerCase() : false;
-		
-		
+
+
 		return render(req, res, { slug, subSlug}, {});
 
 		return next();
-	});	
-	*/
-	
+	});	*/
+
 	app.use((req, res) => {
 		res.status(404);
 
