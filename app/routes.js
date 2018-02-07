@@ -232,7 +232,7 @@ const render = (req, res, template, data) => {
 		data.VQ_API_URL = CONFIG.VQ_API_URL.replace('?tenantId?', tenantId);
 		data.TENANT_STRIPE_PUBLIC_KEY = tenantData[tenantId].stripePublicKey;
 
-		if (CONFIG.PRODUCTION) {
+/* 		if (CONFIG.PRODUCTION) {
 			data.VQ_WEB_APP_CSS_URL =
 				'https://s3.eu-central-1.amazonaws.com/vq-marketplace/static/css/main.css';
 			data.VQ_WEB_APP_JS_URL =
@@ -241,7 +241,11 @@ const render = (req, res, template, data) => {
 			data.VQ_WEB_APP_CSS_URL = 'https://s3.eu-central-1.amazonaws.com/vq-marketplace-dev/static/css/main.css';
 			data.VQ_WEB_APP_JS_URL =
 			'https://s3.eu-central-1.amazonaws.com/vq-marketplace-dev/static/js/main.js';
-		}
+		} */
+
+		data.VQ_WEB_APP_CSS_URL = 'https://s3.eu-central-1.amazonaws.com/vq-marketplace-dev/static/css/main.css';
+			data.VQ_WEB_APP_JS_URL =
+			'https://s3.eu-central-1.amazonaws.com/vq-marketplace-dev/static/js/main.js';
 		
 		data.categories = configs[0];
 		data.getConfig = fieldKey => configs[1][fieldKey];
