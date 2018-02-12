@@ -1,30 +1,30 @@
 <footer>
     <div class="card" style="background-color: <%- getConfig('COLOR_PRIMARY') %>; margin: 0px !important;">
-        <div class="row st-menu-line" style="padding-left:50px;">
-                    <div class="card-action">
-                        <div class="row st-bold">
-                            <div class="col-sm-3">
-                                <h5 class="st-text-white st-bold"><%- getConfig('NAME') %></h5>
-                                <ul class="list-unstyled">
-                                    <li>
-                                        <a style="color: white;" href="/"><%- translate('HEADER_BUTTON_FOR_BUYERS') %></a>
-                                    </li>
-                                    <li>
-                                        <a style="color: white;" href="/<%-getConfig('LANDING_PAGE_HEADER_BUTTON_TEXT_FOR_SELLERS') || 'taskers' %>"><%- translate('HEADER_BUTTON_FOR_SELLERS') %></a>
-                                    </li>
-                                    <li>
-                                        <a style="color: white;" href="/privacy-policy"><%- translate('HOMEPAGE_FOOTER_PRIVACY') %></a>
-                                    </li>
-                                    <li>
-                                        <a style="color: white;" href="/terms-of-service"><%- translate('HOMEPAGE_FOOTER_TERMS') %></a>
-                                    </li>
-                                    <li>
-                                        <a style="color: white;" href="/app/imprint"><%- translate('HOMEPAGE_FOOTER_IMPRINT') %></a>
-                                    </li>
-                                    <% if(getConfig('CUSTOM_CONTACT_PAGE_URL')) { %>
-                                    <li>
-                                        <a style="color: white;" href="<%- getConfig('CUSTOM_CONTACT_PAGE_URL') %>"><%- translate('HOMEPAGE_FOOTER_CONTACT') || 'Contact' %></a>
-                                    </li>
+        <div class="row st-menu-line" style="padding-left:50px; margin-bottom: 0px !important;">
+            <div class="card-action">
+                <div class="row st-bold">
+                    <div class="col-sm-3">
+                        <h5 class="st-text-white st-bold"><%- getConfig('NAME') %></h5>
+                        <ul class="list-unstyled">
+                            <li>
+                                <a style="color: white;" href="/"><%- translate('HEADER_BUTTON_FOR_BUYERS') %></a>
+                            </li>
+                            <li>
+                                <a style="color: white;" href="/<%-getConfig('LANDING_PAGE_HEADER_BUTTON_TEXT_FOR_SELLERS') || 'taskers' %>"><%- translate('HEADER_BUTTON_FOR_SELLERS') %></a>
+                            </li>
+                            <li>
+                                <a style="color: white;" href="/privacy-policy"><%- translate('HOMEPAGE_FOOTER_PRIVACY') %></a>
+                            </li>
+                            <li>
+                                <a style="color: white;" href="/terms-of-service"><%- translate('HOMEPAGE_FOOTER_TERMS') %></a>
+                            </li>
+                            <li>
+                                <a style="color: white;" href="/app/imprint"><%- translate('HOMEPAGE_FOOTER_IMPRINT') %></a>
+                            </li>
+                            <% if(getConfig('CUSTOM_CONTACT_PAGE_URL')) { %>
+                            <li>
+                                <a style="color: white;" href="<%- getConfig('CUSTOM_CONTACT_PAGE_URL') %>"><%- translate('HOMEPAGE_FOOTER_CONTACT') || 'Contact' %></a>
+                            </li>
 
                                     <% } %>
                                     <% if(getConfig('CUSTOM_BLOG_PAGE_URL')) { %>
@@ -33,116 +33,115 @@
                                     </li>
                                     <% } %>
 
-                                    <% if(getConfig('CUSTOM_HOW_IT_WORKS_URL')) { %>
-                                    <li>
-                                        <a style="color: white;" href="<%- getConfig('CUSTOM_HOW_IT_WORKS_URL') %>"><%- translate('HOMEPAGE_FOOTER_HOW_IT_WORKS') || 'How it works?' %></a>
-                                    </li>
-                                    <% } %>
-
-                                    <% if(getConfig('CUSTOM_FAQ_URL')) { %>
-                                    <li>
-                                        <a style="color: white;" href="<%- getConfig('CUSTOM_FAQ_URL') %>"><%- translate('HOMEPAGE_FOOTER_FAQ') || 'FAQ' %></a>
-                                    </li>
-                                    <% } %>
-                                </ul>	
-                            </div>
-                            <div class="col-sm-3 hidden">
-                                <h5 class="st-text-white st-bold"><%- translate('DISCOVER') %></h5>
-                                <ul style="color: white;" class="list-unstyled">
-                                    <li><a href="/"><%- translate('BUTTON_CLIENTS') %></a></li> 
-                                    <li><a href="/freelancers"><%- translate('BUTTON_FREELANCERS') %></a></li>  
-                                    <li><a href="/app"><%- translate('BROWSE_LISTINGS') %></a></li> 
-                                    <li><a href="/app/new-listing"><%- translate('OFFER_LISTINGS') %></a></li>               
-                                    <li><a href="/blog"><%- translate('BLOG') %></a></li>
-                                </ul>
-                            </div>
-                            <% if (categories.length > 0) { %>
-                                <div class="col-sm-3" style="height:100%">
-                                    <h5 class="st-text-white st-bold"><%- translate('HOMEPAGE_FOOTER_CATEGORIES') %></h5>
-                                    <ul class="list-unstyled" style="color: white;">
-                                        <% categories
-                                        .filter(category => Number(category.status) === 0)
-                                        .forEach(category => { %>
-                                            <li>
-                                                <a style="color: white;" href="/app/new-listing">
-                                                    <%- category.label %>
-                                                </a>
-                                            </li>
-                                        <% }); %>
-                                    </ul>	
-                                </div>
+                            <% if(getConfig('CUSTOM_HOW_IT_WORKS_URL')) { %>
+                            <li>
+                                <a style="color: white;" href="<%- getConfig('CUSTOM_HOW_IT_WORKS_URL') %>"><%- translate('HOMEPAGE_FOOTER_HOW_IT_WORKS') || 'How it works?' %></a>
+                            </li>
                             <% } %>
-                            <div class="col-sm-3">
-                                <h5 class="st-text-white st-bold"><%- translate('HOMEPAGE_FOOTER_SOCIAL_MEDIA') %></h5>
-                                <%
-                                [
-                                    [ "SOCIAL_FB_USERNAME", "fa-facebook-official", "https://www.facebook.com/" ],
-                                    [ "SOCIAL_TWITTER_USERNAME", "fa-twitter", "https://www.twitter.com/" ],
-                                    [ "SOCIAL_INSTAGRAM_USERNAME", "fa-instagram", "https://www.instagram.com/" ],
-                                    [ "SOCIAL_YOUTUBE_USERNAME", "fa-youtube", "https://www.youtube.com/"  ],
-                                    [ "SOCIAL_GITHUB_USERNAME", "fa-github", "https://www.github.com/"  ]
-                                ].forEach(function(socialItem) {
-                                    if (getConfig(socialItem[0])) {
-                                %>
-                                    <a style="color:white" href="<%- socialItem[2] %><%- getConfig(socialItem[0]) %>/" target="_blank"><i class="fa <%- socialItem[1] %> fa-2x" aria-hidden="true"></i></a>	    
-                                <% }
-                                }); %>
-                            </div>
-                            <%
-                                if (
-                                    (getConfig("LANGUAGES") || '')
-                                    .split(',')
-                                    .filter(_ => _ !== '')
-                                    .length > 0
-                                ) {
-                            %>
-                            <div class="col-sm-3">
-                                <%
-                                        const LANG_LABELS = {
-                                            "cs": "Czech",
-                                            "da": "Danish",
-                                            "nl": "Dutch",
-                                            "en": "English",
-                                            "et": "Estonian",
-                                            "fi": "Finnish",
-                                            "fr": "French",
-                                            "de": "German",
-                                            "hu": "Magyar",
-                                            "it": "Italian",
-                                            "pl": "Polish",
-                                            "pt": "Portuguese",
-                                            "ru": "Russian",
-                                            "es": "Spanish",
-                                            "sv": "Swedish"
-                                        };
-                                %>
-                                <ul style="margin-top: 15px;">
+
+                            <% if(getConfig('CUSTOM_FAQ_URL')) { %>
+                            <li>
+                                <a style="color: white;" href="<%- getConfig('CUSTOM_FAQ_URL') %>"><%- translate('HOMEPAGE_FOOTER_FAQ') || 'FAQ' %></a>
+                            </li>
+                            <% } %>
+                        </ul>	
+                    </div>
+                    <div class="col-sm-3 hidden">
+                        <h5 class="st-text-white st-bold"><%- translate('DISCOVER') %></h5>
+                        <ul style="color: white;" class="list-unstyled">
+                            <li><a href="/"><%- translate('BUTTON_CLIENTS') %></a></li> 
+                            <li><a href="/freelancers"><%- translate('BUTTON_FREELANCERS') %></a></li>  
+                            <li><a href="/app"><%- translate('BROWSE_LISTINGS') %></a></li> 
+                            <li><a href="/app/new-listing"><%- translate('OFFER_LISTINGS') %></a></li>               
+                            <li><a href="/blog"><%- translate('BLOG') %></a></li>
+                        </ul>
+                    </div>
+                    <% if (categories.length > 0) { %>
+                        <div class="col-sm-3" style="height:100%">
+                            <h5 class="st-text-white st-bold"><%- translate('HOMEPAGE_FOOTER_CATEGORIES') %></h5>
+                            <ul class="list-unstyled" style="color: white;">
+                                <% categories
+                                .filter(category => Number(category.status) === 0)
+                                .forEach(category => { %>
                                     <li>
-                                        <a style="color: white;" href="/<%-getConfig('DEFAULT_LANG')%><%- originalUrl.split('/').filter(_ => _.length !== 2).join('/') %>">
-                                            <strong><%- LANG_LABELS[(getConfig('DEFAULT_LANG') || 'en').toLowerCase()] %></strong>
+                                        <a style="color: white;" href="/app/new-listing">
+                                            <%- category.label %>
                                         </a>
                                     </li>
-                                    <%
-                                        (getConfig("LANGUAGES") || '')
-                                        .split(',')
-                                        .forEach(LANG => {
-                                    %>
-                                        <li>
-                                            <a style="color: white;" href="/<%- LANG %><%- originalUrl.split('/').filter(_ => _.length !== 2).join('/') %>">
-                                                <strong><%- LANG_LABELS[(LANG || 'en').toLowerCase()] %></strong>
-                                            </a>
-                                        </li>
-                                    <%
-                                        });
-                                    %>
-                                </ul>
-                            </div>
-                            <%
-                                }
-                            %>
+                                <% }); %>
+                            </ul>	
                         </div>
+                    <% } %>
+                    <div class="col-sm-3">
+                        <h5 class="st-text-white st-bold"><%- translate('HOMEPAGE_FOOTER_SOCIAL_MEDIA') %></h5>
+                        <%
+                        [
+                            [ "SOCIAL_FB_USERNAME", "fa-facebook-official", "https://www.facebook.com/" ],
+                            [ "SOCIAL_TWITTER_USERNAME", "fa-twitter", "https://www.twitter.com/" ],
+                            [ "SOCIAL_INSTAGRAM_USERNAME", "fa-instagram", "https://www.instagram.com/" ],
+                            [ "SOCIAL_YOUTUBE_USERNAME", "fa-youtube", "https://www.youtube.com/"  ],
+                            [ "SOCIAL_GITHUB_USERNAME", "fa-github", "https://www.github.com/"  ]
+                        ].forEach(function(socialItem) {
+                            if (getConfig(socialItem[0])) {
+                        %>
+                            <a style="color:white" href="<%- socialItem[2] %><%- getConfig(socialItem[0]) %>/" target="_blank"><i class="fa <%- socialItem[1] %> fa-2x" aria-hidden="true"></i></a>	    
+                        <% }
+                        }); %>
                     </div>
+                    <%
+                        if (
+                            (getConfig("LANGUAGES") || '')
+                            .split(',')
+                            .filter(_ => _ !== '')
+                            .length > 0
+                        ) {
+                    %>
+                    <div class="col-sm-3">
+                        <%
+                                const LANG_LABELS = {
+                                    "cs": "Czech",
+                                    "da": "Danish",
+                                    "nl": "Dutch",
+                                    "en": "English",
+                                    "et": "Estonian",
+                                    "fi": "Finnish",
+                                    "fr": "French",
+                                    "de": "German",
+                                    "hu": "Magyar",
+                                    "it": "Italian",
+                                    "pl": "Polish",
+                                    "pt": "Portuguese",
+                                    "ru": "Russian",
+                                    "es": "Spanish",
+                                    "sv": "Swedish"
+                                };
+                        %>
+                        <ul style="margin-top: 15px;">
+                            <li>
+                                <a style="color: white;" href="/<%-getConfig('DEFAULT_LANG')%><%- originalUrl.split('/').filter(_ => _.length !== 2).join('/') %>">
+                                    <strong><%- LANG_LABELS[(getConfig('DEFAULT_LANG') || 'en').toLowerCase()] %></strong>
+                                </a>
+                            </li>
+                            <%
+                                (getConfig("LANGUAGES") || '')
+                                .split(',')
+                                .forEach(LANG => {
+                            %>
+                                <li>
+                                    <a style="color: white;" href="/<%- LANG %><%- originalUrl.split('/').filter(_ => _.length !== 2).join('/') %>">
+                                        <strong><%- LANG_LABELS[(LANG || 'en').toLowerCase()] %></strong>
+                                    </a>
+                                </li>
+                            <%
+                                });
+                            %>
+                        </ul>
+                    </div>
+                    <%
+                        }
+                    %>
                 </div>
             </div>
         </div>
+    </div>
 </footer>
