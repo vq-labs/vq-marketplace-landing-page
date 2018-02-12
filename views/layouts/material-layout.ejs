@@ -107,6 +107,9 @@
         -o-background-size: cover;
         background-size: cover;
    }
+   .md-menu.md-open, .md-open-menu-container, .md-open-menu-container.md-active {
+        z-index: 2001;
+    }
   </style>
 
 <base href="<% if (typeof base === 'undefined' ) { %>/<% } else { %><%-base%><% } %>">
