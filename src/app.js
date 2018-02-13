@@ -1,3 +1,5 @@
+
+
 const makeVisible = id => {
   document.getElementById(id).className =
   document.getElementById(id).className.replace(/\bhidden\b/,'');
@@ -11,7 +13,7 @@ const makeInvisible = id => {
 const toogleLoggedInMenuPoints = (shouldShow, userType) => {
   const toogle = shouldShow ? makeVisible : makeInvisible;
 
-  if (shouldShow && userType === 1) {
+/*   if (shouldShow && userType === 1) {
     toogle("vq-header-new-listing-btn");
     toogle("vq-header-new-listing-xs-btn");
   }
@@ -19,14 +21,14 @@ const toogleLoggedInMenuPoints = (shouldShow, userType) => {
   if (shouldShow && userType === 2) {
     toogle("vq-header-browse-btn");
     toogle("vq-header-browse-xs-btn");
-  }
+  } */
   
-  if (!shouldShow) {
+/*   if (!shouldShow) {
     toogle("vq-header-new-listing-btn");
     toogle("vq-header-new-listing-xs-btn");
     toogle("vq-header-browse-btn");
     toogle("vq-header-browse-xs-btn");
-  }
+  } */
 
   toogle("vq-header-dashboard-btn");
   toogle("vq-header-dashboard-xs-btn");
@@ -101,9 +103,127 @@ app.run((ViciAuth, API_URL) => {
     });
 });
 
-app.controller('headerCtrl', function(ViciAuth, $mdMenu, $mdSidenav) {
+app.controller('headerCtrl', function($scope, ViciAuth, $mdMenu, $mdSidenav, $window, $http) {
 	const header = this;
-	var originatorEv;
+  var originatorEv;
+  $scope.loaded = false;
+
+  $http.get($window.VQ_API_URL.replace('?tenantId?', $window.TENANT_ID) + '/app_config')
+  .then(_ => {
+    $scope.CONFIG = _.data;
+    $scope.loaded = true;
+  });
+
+  const getConfig = (fieldKey) => {
+    return $scope.CONFIG.find(c => c.fieldKey === fieldKey).fieldValue;
+  }
+  
+  $scope.shouldShowButton = (buttonType) => {
+    const isLoggedIn = header.user ? true : false;
+    const userType = header.user ? Number(header.user.userType) : undefined;
+
+    if (buttonType === 'dashboard') {
+      if (isLoggedIn) {
+        return true;
+      }
+
+      return false;
+    }
+  
+    if (buttonType === 'browse') {
+      if (
+        $scope.CONFIG !== undefined &&
+        (
+          getConfig('LISTING_ENABLE_PUBLIC_VIEW') === "1" &&
+          !isLoggedIn
+        ) ||
+        (
+          isLoggedIn &&
+          (
+            userType === 0
+          ) ||
+          (
+            userType === 1 &&
+            getConfig('USER_TYPE_SUPPLY_LISTING_ENABLED') === "1"
+          ) ||
+          (
+            userType === 2 &&
+            getConfig('USER_TYPE_DEMAND_LISTING_ENABLED') === "1"
+          )
+        )
+      ) {
+        return true;
+      }
+      return false;
+    }
+  
+    if (buttonType === 'new-listing') {
+      if (
+        $scope.CONFIG &&
+        (
+          isLoggedIn &&
+          (
+            userType === 0
+          ) ||
+          (
+            userType === 1 &&
+            getConfig('USER_TYPE_DEMAND_LISTING_ENABLED') === "1"
+          ) ||
+          (
+            userType === 2 &&
+            getConfig('USER_TYPE_SUPPLY_LISTING_ENABLED') === "1"
+          )
+        )
+      ) {
+        return true;
+      }
+      return false;
+    }
+
+    if (buttonType === 'listings') {
+      if (
+        $scope.CONFIG &&
+        isLoggedIn &&
+        (
+          userType === 0
+        ) ||
+        (
+          userType === 1 &&
+          getConfig('USER_TYPE_DEMAND_LISTING_ENABLED') === "1"
+        ) ||
+        (
+          userType === 2 &&
+          getConfig('USER_TYPE_SUPPLY_LISTING_ENABLED') === "1"
+        )
+      ) {
+        return true;
+      }
+
+      return false;
+    }
+
+    if (buttonType === 'requests') {
+      if (
+        $scope.CONFIG &&
+        isLoggedIn &&
+        (
+          userType === 0
+        ) ||
+        (
+          userType === 1 &&
+          getConfig('USER_TYPE_SUPPLY_LISTING_ENABLED') === "1"
+        ) ||
+        (
+          userType === 2 &&
+          getConfig('USER_TYPE_DEMAND_LISTING_ENABLED') === "1"
+        )
+      ) {
+        return true;
+      }
+
+      return false;
+    }
+  }
 
   header.toggleLeft = () => $mdSidenav('left').toggle();
 
