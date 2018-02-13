@@ -203,7 +203,7 @@ const allowedDomains = {
 	"bitcoinswap.com": "bitcoinswap"
 };
 
-const render = (req, res, template, data) => {
+const render = (req, res, template, data, next) => {
 	let tenantId = process.env.TENANT_ID || req.subdomains[req.subdomains.length - 1];
 
 	if (!tenantId) {
@@ -232,69 +232,75 @@ const render = (req, res, template, data) => {
 		data.VQ_API_URL = CONFIG.VQ_API_URL.replace('?tenantId?', tenantId);
 		data.TENANT_STRIPE_PUBLIC_KEY = tenantData[tenantId].stripePublicKey;
 
-/* 		if (CONFIG.PRODUCTION) {
-			data.VQ_WEB_APP_CSS_URL =
-				'https://s3.eu-central-1.amazonaws.com/vq-marketplace/static/css/main.css';
-			data.VQ_WEB_APP_JS_URL =
-				'https://s3.eu-central-1.amazonaws.com/vq-marketplace/static/js/main.js';
+		if (CONFIG.PRODUCTION) {
+			data.VQ_WEB_APP_CSS_URL = 'https://s3.eu-central-1.amazonaws.com/vq-marketplace/static/css/main.css';
+			data.VQ_WEB_APP_JS_URL = 'https://s3.eu-central-1.amazonaws.com/vq-marketplace/static/js/main.js';
 		} else {
 			data.VQ_WEB_APP_CSS_URL = 'https://s3.eu-central-1.amazonaws.com/vq-marketplace-dev/static/css/main.css';
-			data.VQ_WEB_APP_JS_URL =
-			'https://s3.eu-central-1.amazonaws.com/vq-marketplace-dev/static/js/main.js';
-		} */
+			data.VQ_WEB_APP_JS_URL = 'https://s3.eu-central-1.amazonaws.com/vq-marketplace-dev/static/js/main.js';
+		}
 
-		data.VQ_WEB_APP_CSS_URL = 'https://s3.eu-central-1.amazonaws.com/vq-marketplace-dev/static/css/main.css';
-			data.VQ_WEB_APP_JS_URL =
-			'https://s3.eu-central-1.amazonaws.com/vq-marketplace-dev/static/js/main.js';
-		
 		data.categories = configs[0];
 		data.getConfig = fieldKey => configs[1][fieldKey];
-		data.getPost = (code, hideError) => {
+		data.getPost = code => {
 		  let postBody = configs[2][code];
 
-		  if (!postBody && (hideError !== undefined && hideError === false)) {
-		    postBody = fs.readFileSync(__dirname + "/../views/st.error.404.index.ejs", "utf8");
-	      }
 	      return postBody;
 		};
+
 		data.getTask = () => configs[3] === undefined ? undefined : configs[3];
 		data.stripHTML = (html) => {
-			return html.replace(/<(?:.|\n)*?>/gm, '')
+			return html.replace(/<(?:.|\n)*?>/gm, '');
 		}
 
 		const getLang = () => {
-		const defaultLang = data.getConfig('DEFAULT_LANG') || CONFIG.DEFAULT_LANGUAGE;
+			const defaultLang = data.getConfig('DEFAULT_LANG') || CONFIG.DEFAULT_LANGUAGE;
+
 			if (req.params.lang) {
 				return configs[1].LANGUAGES.indexOf(req.params.lang) !== -1 ? req.params.lang : defaultLang;
-			} else if (req.query.lang) {
-				return configs[1].LANGUAGES.indexOf(req.query.lang) !== -1 ? req.query.lang : defaultLang;
-			} else {
-				return defaultLang;
 			}
+			
+			if (req.query.lang) {
+				return configs[1].LANGUAGES.indexOf(req.query.lang) !== -1 ? req.query.lang : defaultLang;
+			}
+
+			return defaultLang;
 		};
+
 		data.translate = i18n.getFactory(
 			tenantId,
 			getLang()
 		);
+
 		data.originalUrl = req.originalUrl;
 
 		data.layout = data.layout || "layouts/material-layout.ejs";
 		data.lang = getLang();
 
-		return res.render(template, data);
-		/**
-		if (typeof template === 'string') {
+		if (typeof template === "string") {
 			return res.render(template, data);
 		}
 
-		const tmpl = fs.readFileSync(__dirname + "/../views/layouts/material-layout.ejs", "utf8");
+		const uncompiledPost = data.getPost(`${template.slug}`);
 
-		data.body = ejs.render(data.getPost(`${template.slug}`), data);
+		if (!uncompiledPost) {
+			return render(req, res, "st.error.404.index.ejs");
+		}
+			
+		data.body = `
+			<section style="margin-top:100px; margin-bottom: 50px;">
+				${ejs.render(uncompiledPost, data)}
+			</section>`;
 
-		// const renderedPost = ejs.render(tmpl, data, {});
-		
-		return res.send(data.body);
-		*/
+		ejs.renderFile(__dirname + "/../views/layouts/material-layout.ejs", data, (err, result) => {
+			if (!err) {
+				res.end(result);
+
+				return;
+			}
+
+			res.end(err.toString());
+		});
 	}
 )};
 
@@ -308,6 +314,17 @@ module.exports = app => {
 		render(req, res, 'app/index.ejs', {
 			layout: 'layouts/empty-bin.ejs'
 		}));
+
+
+	app.get("/:slug/:subSlug?", (req, res, next) => {
+		const slug = req.params.slug.toLowerCase();
+		const subSlug = req.params.subSlug ? req.params.subSlug.toLowerCase() : false;
+
+		return render(req, res, {
+			slug,
+			subSlug
+		}, {}, next);
+	});
 
 	/**
 	 * Landing page for Buyers / Clients (userType: 1)
@@ -324,22 +341,6 @@ module.exports = app => {
 	app.get("/health", (req, res) => {
 		res.send('Health OK');
 	});
-
-
-	/*/!*
-	* You can create pages under views/pages
-	* Subfolders will be mapped to main slugs and subslags to the file names as st.<subslug>.index.ejs
-	*!/
-
-	app.get("/:slug/:subSlug?", (req, res, next) => {
-		const slug = req.params.slug.toLowerCase();
-		const subSlug = req.params.subSlug ? req.params.subSlug.toLowerCase() : false;
-
-
-		return render(req, res, { slug, subSlug}, {});
-
-		return next();
-	});	*/
 
 	app.use((req, res) => {
 		res.status(404);
