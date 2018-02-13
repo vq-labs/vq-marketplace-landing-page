@@ -1,20 +1,21 @@
-<header ng-controller="headerCtrl as header" class="vq-nav" style="height:69px;">
+<script>var a = "asdf";</script>
+<header ng-controller="headerCtrl as header" ng-init="getConfig = '<%= getConfig %>'" class="vq-nav" style="height:69px;">
 	<md-sidenav ng-cloak class="md-sidenav-left" md-component-id="left" md-whiteframe="4">
 		<md-content layout-margin>
 			<md-list flex>
-				<md-list-item id="vq-header-new-listing-xs-btn" class="hidden">
+				<md-list-item id="vq-header-new-listing-xs-btn" ng-show="shouldShowButton('new-listing')">
 					<a style="text-decoration: none;" href="/app/new-listing" target="_self">
 						<span class="blue-grey-text text-darken-1"><%- translate('HEADER_ADD_LISTING') %></span>
 					</a>
 				</md-list-item>
 
-				<md-list-item id="vq-header-dashboard-xs-btn" class="hidden">
+				<md-list-item id="vq-header-dashboard-xs-btn">
 					<a style="text-decoration: none;" href="/app/dashboard" target="_self">
 						<span class="blue-grey-text text-darken-1"><%- translate('HEADER_DASHBOARD') %></span>
 					</a>
 				</md-list-item>
 
-				<md-list-item id="vq-header-browse-xs-btn" class="hidden">
+				<md-list-item id="vq-header-browse-xs-btn" ng-show="shouldShowButton('browse')">
 					<a style="text-decoration: none;" href="/app" target="_self">
 						<span class="blue-grey-text text-darken-1"><%- translate('HEADER_LISTINGS') %></span>
 					</a>
@@ -81,7 +82,7 @@
 			<div style="cursor:pointer;" ng-click="header.toggleLeft()" class="visible-xs visible-sm button-collapse blue-grey-text text-darken-1">
 				<i class="material-icons">menu</i>
 			</div>
-			<ul id="nav-mobile" class="right hide-on-med-and-down">
+			<ul id="nav-mobile" class="right hide-on-med-and-down" ng-show="loaded">
 				<% if ((originalUrl.split('?')[0] === '/' || originalUrl.split('?')[0].length === 3) && translate('HEADER_BUTTON_FOR_SELLERS')) { %>
 					<li id="vq-header-user-landing-page-btn">
 						<a href="/taskers" target="_self">
@@ -98,8 +99,8 @@
 					</li>
 				<% } %>
                 
-				<li id="vq-header-new-listing-btn" class="hidden">
-					<a style="text-decoration: none;" href="/app/new-listing" target="_self">
+				<li id="vq-header-new-listing-btn">
+					<a style="text-decoration: none;" ng-show="shouldShowButton('new-listing')" href="/app/new-listing" target="_self">
 						<span class="blue-grey-text text-darken-1"><%- translate('HEADER_ADD_LISTING') %></span>
 					</a>
 				</li>
@@ -110,8 +111,8 @@
 					</a>
 				</li>
 
-				<li id="vq-header-browse-btn" class="hidden">
-					<a style="text-decoration: none;" href="/app" target="_self">
+				<li id="vq-header-browse-btn">
+					<a style="text-decoration: none;" ng-show="shouldShowButton('browse')" href="/app" target="_self">
 						<span class="blue-grey-text text-darken-1"><%- translate('HEADER_LISTINGS') %></span>
 					</a>
 				</li>
