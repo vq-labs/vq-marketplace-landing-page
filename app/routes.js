@@ -203,7 +203,7 @@ const allowedDomains = {
 	"bitcoinswap.com": "bitcoinswap"
 };
 
-const render = (req, res, template, data, next) => {
+const render = (req, res, template, data) => {
 	let tenantId = process.env.TENANT_ID || req.subdomains[req.subdomains.length - 1];
 
 	if (!tenantId) {
@@ -277,6 +277,12 @@ const render = (req, res, template, data, next) => {
 		data.layout = data.layout || "layouts/material-layout.ejs";
 		data.lang = getLang();
 
+		const supplySlug = data.getConfig("LANDING_PAGE_HEADER_BUTTON_TEXT_FOR_SELLERS");
+
+		if (supplySlug === template.slug || template.slug === "taskers") {
+			return res.render('index-provider.ejs', data);
+		}
+
 		if (typeof template === "string") {
 			return res.render(template, data);
 		}
@@ -286,7 +292,7 @@ const render = (req, res, template, data, next) => {
 		if (!uncompiledPost) {
 			return render(req, res, "st.error.404.index.ejs");
 		}
-			
+
 		data.body = `
 			<section style="margin-top:100px; margin-bottom: 50px;">
 				${ejs.render(uncompiledPost, data)}
@@ -333,10 +339,11 @@ module.exports = app => {
 
 	/**
 	 * Landing page for Sellers / Taskers (userType: 2)
-	 */
+	
 	app.get("/:lang([a-zA-Z]{2})?/:supplySideSlug", (req, res) => render(req, res, "index-provider.ejs"));
+	*/
 
-	app.get("/:lang([a-zA-Z]{2})?/:postCode", (req, res) => render(req, res, "index-post.ejs", { postCode: req.params.postCode.toLowerCase() }));
+	// app.get("/:lang([a-zA-Z]{2})?/:postCode", (req, res) => render(req, res, "index-post.ejs", { postCode: req.params.postCode.toLowerCase() }));
 
 	app.get("/health", (req, res) => {
 		res.send('Health OK');
