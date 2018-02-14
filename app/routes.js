@@ -280,10 +280,9 @@ const render = (req, res, template, data) => {
 		const supplySlug = data.getConfig("LANDING_PAGE_HEADER_BUTTON_TEXT_FOR_SELLERS");
 
 		if (
-			supplySlug &&
+			template.slug === "taskers" ||
 			(
-				supplySlug === template.slug ||
-				template.slug === "taskers"
+				supplySlug && supplySlug === template.slug
 			)
 		) {
 			return res.render('index-provider.ejs', data);
