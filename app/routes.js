@@ -197,7 +197,7 @@ ResponseService.error500 = function(res){
 
 // this should be part of the external config
 const allowedDomains = {
-	"rent.kitchen": "rental-kitchen",
+	"rent.kitchen": "rentkitchen",
 	"clickforwork.hu": "click4work",
 	"talentwand.de": "talentwand",
 	"bitcoinswap.com": "bitcoinswap"

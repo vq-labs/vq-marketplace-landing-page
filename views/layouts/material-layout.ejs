@@ -125,8 +125,8 @@
 <body id="vq-body" class="hidden" ng-app="vqApp" ng-strict-di style="background-color: rgb(250,250,250)">
 
 <% include ../partials/header %>   
-      
-<% 
+
+<%
   var categoryIndex = categories.map(cat => '/category/' + cat.code).indexOf(originalUrl);
   var category = categories[categoryIndex];
 
