@@ -241,6 +241,7 @@ const render = (req, res, template, data) => {
 		}
 
 		data.categories = configs[0];
+		data.CONFIG = configs[1];
 		data.getConfig = fieldKey => configs[1][fieldKey];
 		data.getPost = code => {
 		  let postBody = configs[2][code];

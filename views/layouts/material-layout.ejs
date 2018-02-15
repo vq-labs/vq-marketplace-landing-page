@@ -18,7 +18,8 @@
 <link rel="stylesheet" href="/libs/angular-material/angular-material.min.css">
 <link rel="stylesheet" href="/libs/angular-material-expansion-panel/dist/md-expansion-panel.min.css" />
 <script>
-  var stCategories = JSON.parse('<%- JSON.stringify(categories) %>');
+  var stCategories = <%- JSON.stringify(categories, undefined, 1) %>;
+  var CONFIG = <%- JSON.stringify(CONFIG, undefined, 1) %>;
   var VQ_API_URL = '<%- VQ_API_URL %>';
 </script>
  <style>
@@ -180,7 +181,7 @@
                   md-selected-item="ctrl.selectedItem"
                   md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
                   md-search-text="ctrl.searchText"
-                  md-selected-item-change="ctrl.selectedItemChange(item)"
+                  md-selected-item-change="ctrl.selectedItemChangeForDemandUser(item)"
                   md-items="item in ctrl.querySearch(ctrl.searchText)"
                   md-item-text="item.label"
                   md-min-length="0"
@@ -228,7 +229,7 @@
                       md-selected-item="ctrl.selectedItem"
                       md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
                       md-search-text="ctrl.searchText"
-                      md-selected-item-change="ctrl.selectedItemChange(item)"
+                      md-selected-item-change="ctrl.selectedItemChangeForSupplyUser(item)"
                       md-items="item in ctrl.querySearch(ctrl.searchText)"
                       md-item-text="item.label"
                       md-min-length="0"

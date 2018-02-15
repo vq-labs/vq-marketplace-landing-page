@@ -54,6 +54,8 @@ const app = angular.module("vqApp", [
 ]);
 
 app.constant("API_URL", typeof VQ_API_URL === "undefined" ? "@@VQ_API_URL" : VQ_API_URL);
+app.constant("CONFIG", typeof CONFIG === "undefined" ? {} : CONFIG);
+app.constant("CATEGORIES", typeof stCategories === "undefined" ? [] : stCategories);
 
 // see https://stackoverflow.com/questions/16098430/angular-ie-caching-issue-for-http
 app.config($httpProvider => {
@@ -103,19 +105,12 @@ app.run((ViciAuth, API_URL) => {
     });
 });
 
-app.controller('headerCtrl', function($scope, ViciAuth, $mdMenu, $mdSidenav, $window, $http) {
+app.controller('headerCtrl', function($scope, ViciAuth, $mdMenu, $mdSidenav, $window, $http, CONFIG) {
 	const header = this;
   var originatorEv;
-  $scope.loaded = false;
-
-  $http.get($window.VQ_API_URL.replace('?tenantId?', $window.TENANT_ID) + '/app_config')
-  .then(_ => {
-    $scope.CONFIG = _.data;
-    $scope.loaded = true;
-  });
 
   const getConfig = (fieldKey) => {
-    return $scope.CONFIG.find(c => c.fieldKey === fieldKey).fieldValue;
+    return CONFIG.find(c => c.fieldKey === fieldKey).fieldValue;
   }
   
   $scope.shouldShowButton = (buttonType) => {
@@ -204,7 +199,7 @@ app.controller('headerCtrl', function($scope, ViciAuth, $mdMenu, $mdSidenav, $wi
 
     if (buttonType === 'requests') {
       if (
-        $scope.CONFIG &&
+        CONFIG &&
         isLoggedIn &&
         (
           userType === 0
@@ -244,7 +239,7 @@ app.controller('headerCtrl', function($scope, ViciAuth, $mdMenu, $mdSidenav, $wi
 	}, err => {});
 });
 
-app.controller('taskAutoCompleteCtrl', function($timeout, $http, $q, $log) {
+app.controller('taskAutoCompleteCtrl', function($timeout, $http, $q, $log, CONFIG, CATEGORIES) {
     var self = this;
 
     self.simulateQuery = false;
@@ -253,7 +248,8 @@ app.controller('taskAutoCompleteCtrl', function($timeout, $http, $q, $log) {
     // list of `state` value/display objects
     self.states        = loadAll();
     self.querySearch   = querySearch;
-    self.selectedItemChange = selectedItemChange;
+    self.selectedItemChangeForSupplyUser = selectedItemChangeForSupplyUser;
+    self.selectedItemChangeForDemandUser = selectedItemChangeForDemandUser;
     self.searchTextChange   = searchTextChange;
 
     self.newState = newState;
@@ -278,13 +274,28 @@ app.controller('taskAutoCompleteCtrl', function($timeout, $http, $q, $log) {
       $log.info('Text changed to ' + text);
     }
 
-    function selectedItemChange(item) {
+    function selectedItemChangeForDemandUser(item) {
+      if (CONFIG.USER_TYPE_SUPPLY_LISTING_ENABLED === "1") {
+        window.location.replace("/app?category=" + item.code + "&utm_source=homepage");
+
+        return;
+      }
+
       window.location.replace("/app/new-listing?category=" + item.code + "&utm_source=homepage")
-      $log.info('Item changed to ' + JSON.stringify(item));
+    }
+
+    function selectedItemChangeForSupplyUser(item) {
+      if (CONFIG.USER_TYPE_DEMAND_LISTING_ENABLED === "1") {
+        window.location.replace("/app?category=" + item.code + "&utm_source=homepage");
+
+        return;
+      }
+
+      window.location.replace("/app/new-listing?category=" + item.code + "&utm_source=homepage")
     }
 
     function loadAll() {
-        var categories = stCategories.filter(category => Number(category.status) === 0).map(function(item) {
+        var categories = CATEGORIES.filter(category => Number(category.status) === 0).map(function(item) {
         return {
           img: item.imageUrl,
           code: item.code,

@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<!--
-    Powered by VQ-Marketplace
-    https://vqmarketplace.com
-    https://vq-labs.com
--->
+
 <html lang="<%- lang %>">
+    <!--
+        Powered by VQ-Marketplace
+        https://vqmarketplace.com
+        https://vq-labs.com
+        https://github.com/vq-labs
+    -->
     <head>
         <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
         <link rel="shortcut icon" href="<%- getConfig('SEO_FAVICON_URL') %>">
@@ -36,6 +38,8 @@
         <script>
             var VQ_API_URL = "<%- VQ_API_URL %>";
             var TENANT_ID = "<%- TENANT_ID %>";
+            var CATEGORIES = <%- JSON.stringify(categories, undefined, 1) %>;
+            var CONFIG = <%- JSON.stringify(CONFIG, undefined, 1) %>;
         </script>
         <script type="text/javascript" src="<%- VQ_WEB_APP_JS_URL %>"></script>
     </body>
