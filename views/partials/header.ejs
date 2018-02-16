@@ -1,22 +1,22 @@
-<header ng-controller="headerCtrl as header" class="vq-nav" style="height:69px; position: fixed; width: 100%; min-width: 100%; z-index: 2000;">
-	<md-sidenav ng-cloak class="md-sidenav-left" md-component-id="left" md-whiteframe="4">
-		<md-content layout-margin>
+<header ng-controller="headerCtrl as header" class="vq-nav" style="height:69px; position: fixed; width: 100%; min-width: 100%; z-index: 2000;overflow: visible;">
+	<md-sidenav ng-cloak class="md-sidenav-left" style="overflow: visible;" md-component-id="left" md-whiteframe="4">
+		<md-content>
 			<md-list flex>
 				<md-list-item id="vq-header-new-listing-xs-btn" ng-show="shouldShowButton('new-listing')">
 					<a style="text-decoration: none;" href="/app/new-listing" target="_self">
-						<span class="blue-grey-text text-darken-1"><%- translate('HEADER_ADD_LISTING') %></span>
+						<span><%- translate('HEADER_ADD_LISTING') %></span>
 					</a>
 				</md-list-item>
 
 				<md-list-item id="vq-header-dashboard-xs-btn">
 					<a style="text-decoration: none;" href="/app/dashboard" target="_self">
-						<span class="blue-grey-text text-darken-1"><%- translate('HEADER_DASHBOARD') %></span>
+						<span><%- translate('HEADER_DASHBOARD') %></span>
 					</a>
 				</md-list-item>
 
 				<md-list-item id="vq-header-browse-xs-btn" ng-show="shouldShowButton('browse')">
 					<a style="text-decoration: none;" href="/app" target="_self">
-						<span class="blue-grey-text text-darken-1"><%- translate('HEADER_LISTINGS') %></span>
+						<span><%- translate('HEADER_LISTINGS') %></span>
 					</a>
 				</md-list-item>
 
