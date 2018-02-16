@@ -110,7 +110,7 @@ app.controller('headerCtrl', function($scope, ViciAuth, $mdMenu, $mdSidenav, $wi
   var originatorEv;
 
   const getConfig = (fieldKey) => {
-    return CONFIG.find(c => c.fieldKey === fieldKey).fieldValue;
+    return CONFIG[fieldKey];
   }
   
   $scope.shouldShowButton = (buttonType) => {
@@ -127,7 +127,7 @@ app.controller('headerCtrl', function($scope, ViciAuth, $mdMenu, $mdSidenav, $wi
   
     if (buttonType === 'browse') {
       if (
-        $scope.CONFIG !== undefined &&
+        CONFIG &&
         (
           getConfig('LISTING_ENABLE_PUBLIC_VIEW') === "1" &&
           !isLoggedIn
@@ -154,7 +154,11 @@ app.controller('headerCtrl', function($scope, ViciAuth, $mdMenu, $mdSidenav, $wi
   
     if (buttonType === 'new-listing') {
       if (
-        $scope.CONFIG &&
+        CONFIG &&
+        (
+          getConfig('LISTING_ENABLE_PUBLIC_VIEW') === "1" &&
+          !isLoggedIn
+        ) ||
         (
           isLoggedIn &&
           (
@@ -177,7 +181,7 @@ app.controller('headerCtrl', function($scope, ViciAuth, $mdMenu, $mdSidenav, $wi
 
     if (buttonType === 'listings') {
       if (
-        $scope.CONFIG &&
+        CONFIG &&
         isLoggedIn &&
         (
           userType === 0
