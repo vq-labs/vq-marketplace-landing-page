@@ -5,7 +5,8 @@ const API_PATHS = {
    CATEGORIES: "/app_task_categories",
    APP_LABEL: "/app_label",
    APP_CONFIG: "/app_config",
-   POST: "/post"
+   POST: "/post",
+   TASK: "/task"
 };
 
 const routeProvider = () => {
@@ -17,7 +18,8 @@ const routeProvider = () => {
         getTenants,
         getCategories,
         getAppLabels,
-        getAppConfig
+        getAppConfig,
+        getTask
     };
 
     function getTenants (callback) {
@@ -48,6 +50,14 @@ const routeProvider = () => {
         url = url.replace('?tenantId?', tenantId);
 
         makeRequest(url, (err, data) => callback(err, data ? data[0]: {}));
+    }
+
+    function getTask (tenantId, taskId, callback) {
+        var url = VQ_API_URL + API_PATHS.TASK + '/' + taskId;
+
+        url = url.replace('?tenantId?', tenantId);
+
+        makeRequest(url, (err, data) => callback(err, data || {}));
     }
 
     function getPosts (tenantId, callback) {

@@ -42,7 +42,10 @@
     "run-sequence": "^2.2.1"
   },
   "scripts": {
-    "start": "gulp run && node server.js",
+    "start:taskrabbit": "VQ_TENANT_API_URL=https://vqmarketplace.vqmarketplace.com/api VQ_API_URL=https://taskrabbit.vqmarketplace.com/api gulp build && TENANT_ID=taskrabbit VQ_TENANT_API_URL=https://vqmarketplace.vqmarketplace.com/api VQ_API_URL=https://taskrabbit.vqmarketplace.com/api node server.js",
+    "start:rentkitchen": "VQ_TENANT_API_URL=https://vqmarketplace.vqmarketplace.com/api VQ_API_URL=https://rentkitchen.vqmarketplace.com/api gulp build && TENANT_ID=rentkitchen VQ_TENANT_API_URL=https://vqmarketplace.vqmarketplace.com/api VQ_API_URL=https://rentkitchen.vqmarketplace.com/api node server.js",
+    "start:taskrabbit-win": "gulp build --VQ_TENANT_API_URL=https://vqmarketplace.vqmarketplace.com/api --VQ_API_URL=https://taskrabbit.vqmarketplace.com/api && node server.js",
+    "start:local-tenant": "gulp build --VQ_API_URL=http://localhost:8080/api && node server.js",
     "build": "gulp build"
   },
   "author": "VQ LABS (https://vq-labs.com)",

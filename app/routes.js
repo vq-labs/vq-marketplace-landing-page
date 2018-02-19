@@ -87,6 +87,30 @@ const postProvider = (tenantId, forceRequest, cb) => {
 	return cb(null, tenantData[tenantId].posts);
 };
 
+const taskProvider = (tenantId, originalUrl, forceRequest, cb) => {
+  cb = cb || function() {};
+  if (originalUrl.includes('/app/task/')) {
+		  const taskId = originalUrl.replace('/app/task/', '');
+
+		  let taskRef = {};
+
+      if (forceRequest) {
+        return vqSDK.getTask(tenantId, taskId, (err, rTask) => {
+          if (err) {
+            return cb(err);
+          }
+
+          taskRef = rTask;
+
+          return cb(null, taskRef);
+        });
+      }
+
+      return cb(null, taskRef);
+  }
+	return cb(null);
+};
+
 const appLabelProvider = (tenantId, forceRequest, lang, cb) => {
 	cb = cb || function() {};
 
@@ -166,8 +190,9 @@ ResponseService.error500 = function(res){
 	});
 };
 
+// this should be part of the external config
 const allowedDomains = {
-	"rent.kitchen": "rent-kitchen",
+	"rent.kitchen": "rentkitchen",
 	"clickforwork.hu": "click4work",
 	"talentwand.de": "talentwand",
 	"bitcoinswap.com": "bitcoinswap"
@@ -188,7 +213,8 @@ const render = (req, res, template, data) => {
 	async.parallel([
 		cb => categoryProvider(tenantId, false, cb),
 		cb => appConfigProvider(tenantId, false, cb),
-		cb => postProvider(tenantId, false, cb)
+		cb => postProvider(tenantId, false, cb),
+		cb => taskProvider(tenantId, req.originalUrl, true, cb),
 	], (err, configs) => {
 		if (err) {
 			if (!configs[0] || !configs[1]) {
@@ -202,19 +228,40 @@ const render = (req, res, template, data) => {
 		data.TENANT_STRIPE_PUBLIC_KEY = tenantData[tenantId].stripePublicKey;
 
 		if (process.env.ENV.toLowerCase() === 'production') {
-			data.VQ_WEB_APP_CSS_URL =
-				'https://s3.eu-central-1.amazonaws.com/vq-marketplace/static/css/main.css';
-			data.VQ_WEB_APP_JS_URL =
-				'https://s3.eu-central-1.amazonaws.com/vq-marketplace/static/js/main.js';
+			data.VQ_WEB_APP_CSS_URL = 'https://s3.eu-central-1.amazonaws.com/vq-marketplace/static/css/main.css';
+			data.VQ_WEB_APP_JS_URL = 'https://s3.eu-central-1.amazonaws.com/vq-marketplace/static/js/main.js';
 		} else {
 			data.VQ_WEB_APP_CSS_URL = 'https://s3.eu-central-1.amazonaws.com/vq-marketplace-dev/static/css/main.css';
-			data.VQ_WEB_APP_JS_URL =
-			'https://s3.eu-central-1.amazonaws.com/vq-marketplace-dev/static/js/main.js';
+			data.VQ_WEB_APP_JS_URL = 'https://s3.eu-central-1.amazonaws.com/vq-marketplace-dev/static/js/main.js';
 		}
-		
+
 		data.categories = configs[0];
+		data.CONFIG = configs[1];
 		data.getConfig = fieldKey => configs[1][fieldKey];
-		data.getPost = code => configs[2][code];
+		data.getPost = code => {
+		  let postBody = configs[2][code];
+
+	      return postBody;
+		};
+
+		data.getTask = () => configs[3] === undefined ? undefined : configs[3];
+		data.stripHTML = (html) => {
+			return html.replace(/<(?:.|\n)*?>/gm, '');
+		}
+
+		const getLang = () => {
+			const defaultLang = data.getConfig('DEFAULT_LANG') || CONFIG.DEFAULT_LANGUAGE;
+
+			if (req.params.lang) {
+				return configs[1].LANGUAGES.indexOf(req.params.lang) !== -1 ? req.params.lang : defaultLang;
+			}
+			
+			if (req.query.lang) {
+				return configs[1].LANGUAGES.indexOf(req.query.lang) !== -1 ? req.query.lang : defaultLang;
+			}
+
+			return defaultLang;
+		};
 
 		// set language
     const getLang = () => {
@@ -232,24 +279,47 @@ const render = (req, res, template, data) => {
 			tenantId,
 			getLang()
 		);
+
 		data.originalUrl = req.originalUrl;
+
 		data.layout = data.layout || "layouts/material-layout.ejs";
 		data.lang = getLang();
 
-		return res.render(template, data);
-		/**
-		if (typeof template === 'string') {
+		const supplySlug = data.getConfig("LANDING_PAGE_HEADER_BUTTON_TEXT_FOR_SELLERS");
+
+		if (
+			template.slug === "taskers" ||
+			(
+				supplySlug && supplySlug === template.slug
+			)
+		) {
+			return res.render('index-provider.ejs', data);
+		}
+
+		if (typeof template === "string") {
 			return res.render(template, data);
 		}
 
-		const tmpl = fs.readFileSync(__dirname + "/../views/layouts/material-layout.ejs", "utf8");
+		const uncompiledPost = data.getPost(`${template.slug}`);
 
-		data.body = ejs.render(data.getPost(`${template.slug}`), data);
+		if (!uncompiledPost) {
+			return render(req, res, "st.error.404.index.ejs");
+		}
 
-		// const renderedPost = ejs.render(tmpl, data, {});
-		
-		return res.send(data.body);
-		*/
+		data.body = `
+			<section style="margin-top:100px; margin-bottom: 50px;">
+				${ejs.render(uncompiledPost, data)}
+			</section>`;
+
+		ejs.renderFile(__dirname + "/../views/layouts/material-layout.ejs", data, (err, result) => {
+			if (!err) {
+				res.end(result);
+
+				return;
+			}
+
+			res.end(err.toString());
+		});
 	}
 )};
 
@@ -264,6 +334,17 @@ module.exports = app => {
 			layout: 'layouts/empty-bin.ejs'
 		}));
 
+
+	app.get("/:slug/:subSlug?", (req, res, next) => {
+		const slug = req.params.slug.toLowerCase();
+		const subSlug = req.params.subSlug ? req.params.subSlug.toLowerCase() : false;
+
+		return render(req, res, {
+			slug,
+			subSlug
+		}, {}, next);
+	});
+
 	/**
 	 * Landing page for Buyers / Clients (userType: 1)
 	 */
@@ -271,29 +352,16 @@ module.exports = app => {
 
 	/**
 	 * Landing page for Sellers / Taskers (userType: 2)
-	 */
-	app.get("/:lang([a-zA-Z]{2})?/taskers", (req, res) => render(req, res, "index-provider.ejs"));
-
 	
+	app.get("/:lang([a-zA-Z]{2})?/:supplySideSlug", (req, res) => render(req, res, "index-provider.ejs"));
+	*/
+
+	// app.get("/:lang([a-zA-Z]{2})?/:postCode", (req, res) => render(req, res, "index-post.ejs", { postCode: req.params.postCode.toLowerCase() }));
+
 	app.get("/health", (req, res) => {
 		res.send('Health OK');
 	});
 
-	/**
-	You can create pages under views/pages
-	Subfolders will be mapped to main slugs and subslags to the file names as st.<subslug>.index.ejs
-
-	app.get("/:slug/:subSlug?", (req, res, next) => {
-		const slug = req.params.slug.toLowerCase();
-		const subSlug = req.params.subSlug ? req.params.subSlug.toLowerCase() : false;
-		
-		
-		return render(req, res, { slug, subSlug}, {});
-
-		return next();
-	});	
-	*/
-	
 	app.use((req, res) => {
 		res.status(404);
 

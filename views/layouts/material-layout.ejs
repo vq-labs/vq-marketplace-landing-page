@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 
 <!---
-    POWERED BY VQ-MARKETPLACE (https://vq-labs.com)
-    We empower entrepreneurs with solutions in sharing economy. VQ Labs builds your online marketplace and turns your idea into reality.
+    POWERED BY VQ-MARKETPLACE (https://vqmarketplace.com)
+    We enable entrepreneurs and small business owners to start their own marketplace platforms in seconds. Fast time to market, easy to customize, free forever.
+
+    MIT Licence
+    2018 Copyright https://github.com/vq-labs
 -->
 
 <html lang="<%- lang %>">
@@ -15,12 +18,13 @@
 <link rel="stylesheet" href="/libs/angular-material/angular-material.min.css">
 <link rel="stylesheet" href="/libs/angular-material-expansion-panel/dist/md-expansion-panel.min.css" />
 <script>
-  var stCategories = JSON.parse('<%- JSON.stringify(categories) %>');
+  var stCategories = <%- JSON.stringify(categories, undefined, 1) %>;
+  var CONFIG = <%- JSON.stringify(CONFIG, undefined, 1) %>;
   var VQ_API_URL = '<%- VQ_API_URL %>';
 </script>
  <style>
   .vq-welcome {
-      height: 500px;
+      height: 650px;
   }
 
   .vq-welcome.vq-welcome-user-type-1 {
@@ -107,6 +111,9 @@
         -o-background-size: cover;
         background-size: cover;
    }
+   .md-menu.md-open, .md-open-menu-container, .md-open-menu-container.md-active {
+        z-index: 2001;
+    }
   </style>
 
 <base href="<% if (typeof base === 'undefined' ) { %>/<% } else { %><%-base%><% } %>">
@@ -119,8 +126,8 @@
 <body id="vq-body" class="hidden" ng-app="vqApp" ng-strict-di style="background-color: rgb(250,250,250)">
 
 <% include ../partials/header %>   
-      
-<% 
+
+<%
   var categoryIndex = categories.map(cat => '/category/' + cat.code).indexOf(originalUrl);
   var category = categories[categoryIndex];
 
@@ -152,7 +159,7 @@
 <% } %>  
 
 <% if (originalUrl.split('?')[0] === '/' || originalUrl.split('?')[0].length === 3) { %> 
-<div class="vq-welcome vq-welcome-user-type-1">
+<div class="vq-welcome vq-welcome-user-type-1" style="padding-top: 69px;">
     <div class="vq-bg-half-transparent" style="position:relative; left:0; z-index: 1; width:100%; height:100%; overflow:hidden;">
           <div class="row vq-welcome-intro">
               <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center">      
@@ -167,33 +174,32 @@
 
           <div class="row vq-welcome-autocomplete">
             <div class="col-xs-12 col-sm-10 col-md-6 col-lg-4 col-sm-offset-1 col-md-offset-3 col-lg-offset-4 text-center" ng-cloak ng-controller="taskAutoCompleteCtrl as ctrl">
-                      <form ng-submit="$event.preventDefault()">
-                        <md-autocomplete 
-                            ng-disabled="ctrl.isDisabled"
-                            md-no-cache="ctrl.noCache"
-                            md-selected-item="ctrl.selectedItem"
-                            md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
-                            md-search-text="ctrl.searchText"
-                            md-selected-item-change="ctrl.selectedItemChange(item)"
-                            md-items="item in ctrl.querySearch(ctrl.searchText)"
-                            md-item-text="item.label"
-                            md-min-length="0"
-                            placeholder="<%- translate('START_PAGE_AUTOCOMPLETE_LABEL') %>">
-                            <md-item-template>
-                              <a style="text-decoration: none; color:black;" ng-href="/app/new-listing?category={{item.code}}&utm_source=homepage">
-                                <div>
-                                  <img ng-src="{{item.img || '/images/category-default-img.jpeg' }}" style="width:40px; height:40px;"/>
-                                  <span class="item-title">
-                                    <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.label}}</span>
-                                  </span>
-                                </div> 
-                              </a> 
-                            </md-item-template>
-                            <md-not-found>
-                            <a href="/app/new-listing?utm_source=homepage"><%- translate('START_PAGE_AUTOCOMPLETE_CLIENTS_NO_RESULTS') %></a>
-                            </md-not-found>
-                        </md-autocomplete>
-                      </form>
+                      
+              <md-autocomplete 
+                  ng-disabled="ctrl.isDisabled"
+                  md-no-cache="ctrl.noCache"
+                  md-selected-item="ctrl.selectedItem"
+                  md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
+                  md-search-text="ctrl.searchText"
+                  md-selected-item-change="ctrl.selectedItemChangeForDemandUser(item)"
+                  md-items="item in ctrl.querySearch(ctrl.searchText)"
+                  md-item-text="item.label"
+                  md-min-length="0"
+                  placeholder="<%- translate('START_PAGE_AUTOCOMPLETE_LABEL') %>">
+                  <md-item-template>
+                    <a style="text-decoration: none; color:black;" ng-href="/app/new-listing?category={{item.code}}&utm_source=homepage">
+                      <div>
+                        <img ng-src="{{item.img || '/images/category-default-img.jpeg' }}" style="width:40px; height:40px;"/>
+                        <span class="item-title">
+                          <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.label}}</span>
+                        </span>
+                      </div> 
+                    </a> 
+                  </md-item-template>
+                  <md-not-found>
+                  <a href="/app/new-listing?utm_source=homepage"><%- translate('START_PAGE_AUTOCOMPLETE_CLIENTS_NO_RESULTS') %></a>
+                  </md-not-found>
+              </md-autocomplete>
   
               </div>
           </div>
@@ -201,8 +207,8 @@
   </div>
 <% } %>
 
-<% if (originalUrl.split('?')[0] === '/taskers' || (originalUrl.split('/')[1].length === 2 && originalUrl.split('/')[2] === 'taskers')) { %> 
-    <div class="vq-welcome vq-welcome-user-type-2">
+<% if (originalUrl.split('?')[0] === '/' + (getConfig('LANDING_PAGE_HEADER_BUTTON_TEXT_FOR_SELLERS') || 'taskers') || (originalUrl.split('/')[1].length === 2 && originalUrl.split('/')[2] === (getConfig('LANDING_PAGE_HEADER_BUTTON_TEXT_FOR_SELLERS') || 'taskers') )) { %> 
+    <div class="vq-welcome vq-welcome-user-type-2" style="padding-top: 69px;">
     <div class="vq-bg-half-transparent" style="position:relative; left:0; z-index: 1; width:100%; height:100%; overflow:hidden;">
             <div class="row vq-welcome-intro" style="position:relative;margin-top:70px;">
                <div class="col-xs-12 text-center">   
@@ -217,34 +223,31 @@
 
           <div class="row" style="padding-top:40px;" >
             <div class="col-xs-12 col-sm-10 col-md-6 col-lg-4 col-sm-offset-1 col-md-offset-3 col-lg-offset-4 text-center" ng-cloak ng-controller="taskAutoCompleteCtrl as ctrl">
-                      <form ng-submit="$event.preventDefault()">
-                        <md-autocomplete 
-                            ng-disabled="ctrl.isDisabled"
-                            md-no-cache="ctrl.noCache"
-                            md-selected-item="ctrl.selectedItem"
-                            md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
-                            md-search-text="ctrl.searchText"
-                            md-selected-item-change="ctrl.selectedItemChange(item)"
-                            md-items="item in ctrl.querySearch(ctrl.searchText)"
-                            md-item-text="item.label"
-                            md-min-length="0"
-                            placeholder="<%- translate('START_PAGE_AUTOCOMPLETE_LABEL_SELLERS') %>">
-                            <md-item-template>
-                              <a style="text-decoration: none; color:black;" ng-href="/app/new-listing?category={{item.code}}&utm_source=homepage">
-                                <div>
-                                  <img ng-src="{{item.img || '/images/category-default-img.jpeg' }}" style="width:40px; height:40px;"/>
-                                  <span class="item-title">
-                                    <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.label}}</span>
-                                  </span>
-                                </div> 
-                              </a> 
-                            </md-item-template>
-                            <md-not-found>
-                            <a href="/app"><%- translate('START_PAGE_AUTOCOMPLETE_PROVIDERS_NO_RESULTS') %></a>
-                            </md-not-found>
-                        </md-autocomplete>
-                      </form>
-  
+                  <md-autocomplete 
+                      ng-disabled="ctrl.isDisabled"
+                      md-no-cache="ctrl.noCache"
+                      md-selected-item="ctrl.selectedItem"
+                      md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
+                      md-search-text="ctrl.searchText"
+                      md-selected-item-change="ctrl.selectedItemChangeForSupplyUser(item)"
+                      md-items="item in ctrl.querySearch(ctrl.searchText)"
+                      md-item-text="item.label"
+                      md-min-length="0"
+                      placeholder="<%- translate('START_PAGE_AUTOCOMPLETE_LABEL_SELLERS') %>">
+                      <md-item-template>
+                        <a style="text-decoration: none; color:black;" ng-href="/app/new-listing?category={{item.code}}&utm_source=homepage">
+                          <div>
+                            <img ng-src="{{item.img || '/images/category-default-img.jpeg' }}" style="width:40px; height:40px;"/>
+                            <span class="item-title">
+                              <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.label}}</span>
+                            </span>
+                          </div> 
+                        </a> 
+                      </md-item-template>
+                      <md-not-found>
+                      <a href="/app"><%- translate('START_PAGE_AUTOCOMPLETE_PROVIDERS_NO_RESULTS') %></a>
+                      </md-not-found>
+                  </md-autocomplete>  
               </div>
           </div>
     </div>
@@ -256,7 +259,7 @@
   	<%- body %>
   </div>	
     
-  <div class="container-fluid">  
+  <div class="container-fluid" style="padding: 0px !important">  
 	  <% include ../partials/footer %>   
   </div>
 

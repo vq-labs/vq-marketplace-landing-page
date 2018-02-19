@@ -24,5 +24,10 @@ The following command will prepare, build and deploy the app to S3 bucket:
 gulp deploy
 ```
 
+## Connect to existing API:
+```
+TENANT_ID=talentwand VQ_API_URL=https://talentwand.vqmarketplace.com/api VQ_TENANT_API_URL=https://vqmarketplace.vqmarketplace.com/api npm run start
+```
+
 # License?
 Apache 2.0

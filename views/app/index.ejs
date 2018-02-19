@@ -1,29 +1,45 @@
 <!DOCTYPE html>
-<!--
-    Powered by VQ-Marketplace
-    https://vqmarketplace.com
-    https://vq-labs.com
--->
+
 <html lang="<%- lang %>">
+    <!--
+        Powered by VQ-Marketplace
+        https://vqmarketplace.com
+        https://vq-labs.com
+        https://github.com/vq-labs
+    -->
     <head>
         <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
         <link rel="shortcut icon" href="<%- getConfig('SEO_FAVICON_URL') %>">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
         <link href="<%- VQ_WEB_APP_CSS_URL %>" rel="stylesheet">
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDtfJPLOpDhjpw4Omrg7QoPfXXY59wf5rY&libraries=places"></script>
-        
-        <title><%- getConfig('SEO_TITLE') %></title>
-        <meta name="description" content="<%- getConfig('SEO_DESCRIPTION') %>" />
-        <meta property="og:title" content="<%- getConfig('SEO_TITLE') %>" />
-        <meta property="og:type" content="website" />
-        <meta property="og:image" content="<%- getConfig('SEO_IMAGE') %>" />
-        <meta property="og:description" content="<%- getConfig('SEO_DESCRIPTION') %>" />
+
+        <% if (typeof getTask() !== 'undefined') { %>
+            <title><%- getTask().title + ' - ' + getConfig('SEO_TITLE') %></title>
+            <meta name="description" content="<%- stripHTML(getTask().description) + ' | ' + getConfig('SEO_DESCRIPTION') %>" />
+            <meta name="keywords" content="<%- getConfig('SEO_KEYWORDS') %>">
+            <meta property="og:title" content="<%- getTask().title + ' - ' + getConfig('SEO_TITLE') %>" />
+            <meta property="og:type" content="website" />
+            <meta property="og:image" content="<%- getTask().images.length > 0 ? getTask().images[0].imageUrl : getConfig('SEO_IMAGE') %>" />
+            <meta property="og:description" content="<%- stripHTML(getTask().description) + ' | ' + getConfig('SEO_DESCRIPTION') %>" />
+        <% } else { %>
+            <title><%- getConfig('SEO_TITLE') %></title>
+            <meta name="description" content="<%- getConfig('SEO_DESCRIPTION') %>" />
+            <meta name="keywords" content="<%- getConfig('SEO_KEYWORDS') %>">
+            <meta property="og:title" content="<%- getConfig('SEO_TITLE') %>" />
+            <meta property="og:type" content="website" />
+            <meta property="og:image" content="<%- getConfig('SEO_IMAGE') %>" />
+            <meta property="og:description" content="<%- getConfig('SEO_DESCRIPTION') %>" />
+        <% } %>
+
     </head>
     <body>
         <div id="root"></div>
         <script>
             var VQ_API_URL = "<%- VQ_API_URL %>";
             var TENANT_ID = "<%- TENANT_ID %>";
+            var CATEGORIES = <%- JSON.stringify(categories, undefined, 1) %>;
+            var CONFIG = <%- JSON.stringify(CONFIG, undefined, 1) %>;
         </script>
         <script type="text/javascript" src="<%- VQ_WEB_APP_JS_URL %>"></script>
     </body>
