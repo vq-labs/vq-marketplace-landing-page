@@ -2,7 +2,7 @@
 Source files for the VQ-Marketplace Landing Page.
 
 # How to start?
-Review .env file and make necessary changes first!
+Review .env.example file and make necessary changes first then rename it to .env file. You should not commit this file because it might contain sensitive information, therefore we have an ignore rule in .gitignore so if you want to commit that, remove that from .gitignore
 
 ```
 npm install
@@ -26,7 +26,7 @@ gulp deploy
 
 ## Connect to existing API:
 ```
-TENANT_ID=talentwand VQ_API_URL=https://talentwand.vqmarketplace.com/api VQ_TENANT_API_URL=https://vqmarketplace.vqmarketplace.com/api npm run start
+node ./node_modules/gulp/bin/gulp.js build --VQ_API_URL=https://taskrabbit.vqmarketplace.com/api node server.js
 ```
 
 # License?

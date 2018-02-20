@@ -47,11 +47,9 @@ const appConfigProvider = (tenantId, forceRequest, cb) => {
 				tenantData[tenantId].appConfig[label.fieldKey] = label.fieldValue;
 			});
 
-			const languagesString = tenantData[tenantId].appConfig["LANGUAGES"];
-
+			const languagesString = tenantData[tenantId].appConfig["LANGUAGES"] || 'en';
 			if (languagesString) {
-				const langArr = (tenantData[tenantId].appConfig["LANGUAGES"] || '').split(",");
-				
+				const langArr = languagesString.split(",");
 				langArr.forEach(LANG => appLabelProvider(tenantId,  forceRequest, LANG, () => {}));
 			}
 			
@@ -200,7 +198,6 @@ const allowedDomains = {
 
 const render = (req, res, template, data) => {
 	let tenantId = process.env.TENANT_ID || req.subdomains[req.subdomains.length - 1];
-
 	if (!tenantId) {
 		tenantId = allowedDomains[req.hostname];
 	}
@@ -250,7 +247,7 @@ const render = (req, res, template, data) => {
 		}
 
 		const getLang = () => {
-			const defaultLang = data.getConfig('DEFAULT_LANG') || CONFIG.DEFAULT_LANGUAGE;
+			const defaultLang = data.getConfig('DEFAULT_LANG') || 'en';
 
 			if (req.params.lang) {
 				return configs[1].LANGUAGES.indexOf(req.params.lang) !== -1 ? req.params.lang : defaultLang;
@@ -262,18 +259,6 @@ const render = (req, res, template, data) => {
 
 			return defaultLang;
 		};
-
-		// set language
-    const getLang = () => {
-		  const defaultLang = data.getConfig('DEFAULT_LANG') || 'en';
-		  if (req.params.lang) {
-		    return configs[1].LANGUAGES.indexOf(req.params.lang) !== -1 ? req.params.lang : defaultLang;
-      } else if (req.query.lang) {
-		    return configs[1].LANGUAGES.indexOf(req.query.lang) !== -1 ? req.query.lang : defaultLang;
-      } else {
-		    return defaultLang;
-      }
-    };
 
 		data.translate = i18n.getFactory(
 			tenantId,
