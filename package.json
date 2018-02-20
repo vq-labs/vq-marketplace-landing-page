@@ -50,5 +50,9 @@
     "build": "node ./node_modules/gulp/bin/gulp.js build"
   },
   "author": "VQ LABS (https://vq-labs.com)",
-  "license": "MIT"
+  "license": "MIT",
+  "engines": {
+    "node": "~8.3.0",
+    "npm": "~5.6.0"
+  }
 }
