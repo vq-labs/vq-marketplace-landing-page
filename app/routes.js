@@ -93,7 +93,7 @@ const taskProvider = (tenantId, originalUrl, forceRequest, cb) => {
 		  let taskRef = {};
 
       if (forceRequest) {
-        return vqSDK.getTask(tenantId, taskId, (err, rTask) => {
+        return routeProvider.getTask(tenantId, taskId, (err, rTask) => {
           if (err) {
             return cb(err);
           }
