@@ -16,7 +16,8 @@
 
 				<md-list-item id="vq-header-browse-xs-btn" ng-show="shouldShowButton('browse')">
 					<a style="text-decoration: none;" href="/app" target="_self">
-						<span><%- translate('HEADER_LISTINGS') %></span>
+						<span ng-show="browseButtonText('supply')"><%- translate('HEADER_SUPPLY_LISTINGS') %></span>
+						<span ng-show="browseButtonText('demand')"><%- translate('HEADER_DEMAND_LISTINGS') %></span>
 					</a>
 				</md-list-item>
 
@@ -126,7 +127,8 @@
 
 				<li id="vq-header-browse-btn">
 					<a style="text-decoration: none;" ng-show="shouldShowButton('browse')" href="/app" target="_self">
-						<span class="blue-grey-text text-darken-1"><%- translate('HEADER_LISTINGS') %></span>
+						<span class="blue-grey-text text-darken-1" ng-show="browseButtonText('supply')"><%- translate('HEADER_SUPPLY_LISTINGS') %></span>
+						<span class="blue-grey-text text-darken-1" ng-show="browseButtonText('demand')"><%- translate('HEADER_DEMAND_LISTINGS') %></span>
 					</a>
 				</li>
 
