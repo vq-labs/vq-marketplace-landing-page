@@ -224,6 +224,33 @@ app.controller('headerCtrl', function($scope, ViciAuth, $mdMenu, $mdSidenav, $wi
     }
   }
 
+  $scope.browseButtonText = (type) => {
+    const isLoggedIn = header.user ? true : false;
+    const userType = header.user ? Number(header.user.userType) : undefined;
+    
+    if (isLoggedIn) {
+      if (userType === 0 && type === 'supply') {
+        return true
+      }
+      if (userType === 1 && type === 'supply') {
+        return true
+      }
+      if (userType === 2 && type === 'demand') {
+        return true
+      }
+    }
+
+    if (getConfig('LISTING_PUBLIC_VIEW_MODE') === 2 && type === 'supply') {
+      return true
+    }
+
+    if (getConfig('LISTING_PUBLIC_VIEW_MODE') === 1 && type === 'demand') {
+      return true
+    }
+
+    return false;
+  }
+
   header.toggleLeft = () => $mdSidenav('left').toggle();
 
 	header.logout = () => {
