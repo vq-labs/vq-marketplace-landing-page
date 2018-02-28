@@ -51,8 +51,8 @@
 
 				<md-list-item id="vq-header-browse-btn" ng-show="shouldShowButton('browse')">
 					<a style="text-decoration: none;" href="/app" target="_self">
-						<span ng-show="browseButtonText('supply')"><%- translate('HEADER_SUPPLY_LISTINGS') %></span>
-						<span ng-show="browseButtonText('demand')"><%- translate('HEADER_DEMAND_LISTINGS') %></span>
+						<span ng-show="(browseButtonText('supply') && !browseButtonText('demand')) || (!browseButtonText('supply') && !browseButtonText('demand'))"><%- translate('HEADER_SUPPLY_LISTINGS') %></span>
+						<span ng-show="(browseButtonText('demand') && !browseButtonText('supply'))"><%- translate('HEADER_DEMAND_LISTINGS') %></span>
 					</a>
 				</md-list-item>
 
@@ -130,8 +130,8 @@
 
 				<li id="vq-header-browse-btn" ng-show="shouldShowButton('browse')">
 					<a style="text-decoration: none;" href="/app" target="_self">
-						<span class="blue-grey-text text-darken-1" ng-show="browseButtonText('supply')"><%- translate('HEADER_SUPPLY_LISTINGS') %></span>
-						<span class="blue-grey-text text-darken-1" ng-show="browseButtonText('demand')"><%- translate('HEADER_DEMAND_LISTINGS') %></span>
+						<span class="blue-grey-text text-darken-1" ng-show="(browseButtonText('supply') && !browseButtonText('demand')) || (!browseButtonText('supply') && !browseButtonText('demand'))"><%- translate('HEADER_SUPPLY_LISTINGS') %></span>
+						<span class="blue-grey-text text-darken-1" ng-show="(browseButtonText('demand') && !browseButtonText('supply'))"><%- translate('HEADER_DEMAND_LISTINGS') %></span>
 					</a>
 				</li>
 
