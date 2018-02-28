@@ -1,4 +1,21 @@
 <header ng-controller="headerCtrl as header" class="vq-nav" style="height:69px; position: fixed; width: 100%; min-width: 100%; z-index: 2000;overflow: visible;">
+	<style>
+		.tasker-button {
+			background-color: transparent;
+			font-weight: bold;
+			border: 2px solid <%- getConfig('COLOR_PRIMARY') %>;
+			color: <%- getConfig('COLOR_PRIMARY') %>;
+			line-height: 36px;
+			box-shadow: initial;
+			height: 40px;
+		}
+
+		.tasker-button:hover {
+			background-color: <%- getConfig('COLOR_PRIMARY') %>;
+			border: 2px solid <%- getConfig('COLOR_PRIMARY') %>;
+			color: #ffffff;
+		}
+	</style>
 	<md-sidenav ng-cloak class="md-sidenav-left" style="overflow: visible;" md-component-id="left" md-whiteframe="4">
 		<md-content>
 			<md-list flex>
@@ -13,11 +30,28 @@
 						<span><%- translate('HEADER_DASHBOARD') %></span>
 					</a>
 				</md-list-item>
+				
+				<% if ((originalUrl.split('?')[0] === '/' || originalUrl.split('?')[0].length === 3) && translate('HEADER_BUTTON_FOR_SELLERS')) { %>
+					<md-list-item>
+						<a href="/<%- getConfig('LANDING_PAGE_HEADER_BUTTON_TEXT_FOR_SELLERS') || 'taskers' %>" target="_self">
+							<span><%- translate('HEADER_BUTTON_FOR_SELLERS') %></span>
+						</a>
+					</md-list-item>
+				<% } %>
+
+				<% if ((originalUrl.split('?')[0] === '/' + (getConfig('LANDING_PAGE_HEADER_BUTTON_TEXT_FOR_SELLERS') || 'taskers') || (originalUrl.split('/')[1].length === 2 && originalUrl.split('/')[2] === (getConfig('LANDING_PAGE_HEADER_BUTTON_TEXT_FOR_SELLERS') || 'taskers') )) && translate('HEADER_BUTTON_FOR_BUYERS')) { %>
+					<md-list-item>
+						<a href="/" target="_self">
+							<span><%- translate('HEADER_BUTTON_FOR_BUYERS') %></span>
+						</a>
+					</md-list-item>
+				<% } %>
+				
 
 				<md-list-item id="vq-header-browse-xs-btn" ng-show="shouldShowButton('browse')">
 					<a style="text-decoration: none;" href="/app" target="_self">
-						<span ng-show="browseButtonText('supply')"><%- translate('HEADER_SUPPLY_LISTINGS') %></span>
-						<span ng-show="browseButtonText('demand')"><%- translate('HEADER_DEMAND_LISTINGS') %></span>
+						<span ng-show="browseButtonText('supply')"><%- translate('HEADER_SUPPLY_LISTINGS') %> test</span>
+						<span ng-show="browseButtonText('demand')"><%- translate('HEADER_DEMAND_LISTINGS') %> test</span>
 					</a>
 				</md-list-item>
 
@@ -82,23 +116,6 @@
 			<div style="cursor:pointer;" ng-click="header.toggleLeft()" class="visible-xs visible-sm button-collapse blue-grey-text text-darken-1">
 				<i class="material-icons">menu</i>
 			</div>
-			<style>
-				.tasker-button {
-					background-color: transparent;
-					font-weight: bold;
-					border: 2px solid <%- getConfig('COLOR_PRIMARY') %>;
-					color: <%- getConfig('COLOR_PRIMARY') %>;
-					line-height: 36px;
-					box-shadow: initial;
-					height: 40px;
-				}
-
-				.tasker-button:hover {
-					background-color: <%- getConfig('COLOR_PRIMARY') %>;
-					border: 2px solid <%- getConfig('COLOR_PRIMARY') %>;
-					color: #ffffff;
-				}
-			</style>
 			<ul id="nav-mobile" class="right hide-on-med-and-down">
 				<% if ((originalUrl.split('?')[0] === '/' || originalUrl.split('?')[0].length === 3) && translate('HEADER_BUTTON_FOR_SELLERS')) { %>
 					<li id="vq-header-user-landing-page-btn">
