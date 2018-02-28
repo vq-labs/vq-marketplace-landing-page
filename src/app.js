@@ -74,6 +74,10 @@ app.controller('headerCtrl', function($scope, ViciAuth, $mdMenu, $mdSidenav, $wi
       if (
         CONFIG &&
         (
+          getConfig('LISTING_ENABLE_PUBLIC_VIEW') === "1" &&
+          !isLoggedIn
+        ) ||
+        (
           isLoggedIn &&
           (
             userType === 0
@@ -96,6 +100,10 @@ app.controller('headerCtrl', function($scope, ViciAuth, $mdMenu, $mdSidenav, $wi
     if (buttonType === 'new-listing') {
       if (
         CONFIG &&
+        (
+          getConfig('LISTING_ENABLE_PUBLIC_VIEW') === "1" &&
+          !isLoggedIn
+        ) ||
         (
           isLoggedIn &&
           (
