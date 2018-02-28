@@ -21,8 +21,8 @@
 			<md-list flex>
 				<% if ((originalUrl.split('?')[0] === '/' || originalUrl.split('?')[0].length === 3) && translate('HEADER_BUTTON_FOR_SELLERS')) { %>
 					<md-list-item id="vq-header-user-landing-page-btn">
-						<a href="/<%- getConfig('LANDING_PAGE_HEADER_BUTTON_TEXT_FOR_SELLERS') || 'taskers' %>" target="_self">
-							<span class="btn st-text-white tasker-button" ><%- translate('HEADER_BUTTON_FOR_SELLERS') %></span>
+						<a style="text-decoration: none;" href="/<%- getConfig('LANDING_PAGE_HEADER_BUTTON_TEXT_FOR_SELLERS') || 'taskers' %>" target="_self">
+							<span><%- translate('HEADER_BUTTON_FOR_SELLERS') %></span>
 						</a>
 					</md-list-item>
 				<% } %>
@@ -30,84 +30,63 @@
 				<% if ((originalUrl.split('?')[0] === '/' + (getConfig('LANDING_PAGE_HEADER_BUTTON_TEXT_FOR_SELLERS') || 'taskers') || (originalUrl.split('/')[1].length === 2 && originalUrl.split('/')[2] === (getConfig('LANDING_PAGE_HEADER_BUTTON_TEXT_FOR_SELLERS') || 'taskers') )) && translate('HEADER_BUTTON_FOR_BUYERS')) { %>
 					<md-list-item id="vq-header-service-provider-landing-page-btn">
 						<a href="/" target="_self">
-							<span class="btn st-text-white tasker-button"><%- translate('HEADER_BUTTON_FOR_BUYERS') %></span>
+							<span><%- translate('HEADER_BUTTON_FOR_BUYERS') %></span>
 						</a>
 					</md-list-item>
 				<% } %>
+
+				<hr ng-show="shouldShowButton('new-listing') || shouldShowButton('dashboard') || shouldShowButton('browse')" />
 				
-				<md-list-item id="vq-header-new-listing-btn">
-					<a style="text-decoration: none;" ng-show="shouldShowButton('new-listing')" href="/app/new-listing" target="_self">
-						<span class="blue-grey-text text-darken-1"><%- translate('HEADER_ADD_LISTING') %></span>
+				<md-list-item id="vq-header-new-listing-btn" ng-show="shouldShowButton('new-listing')">
+					<a style="text-decoration: none;" href="/app/new-listing" target="_self">
+						<span><%- translate('HEADER_ADD_LISTING') %></span>
 					</a>
 				</md-list-item>
 
-				<md-list-item id="vq-header-dashboard-btn">
+				<md-list-item id="vq-header-dashboard-btn" ng-show="shouldShowButton('dashboard')">
 					<a style="text-decoration: none;" href="/app/dashboard" target="_self">
-						<span class="blue-grey-text text-darken-1"><%- translate('HEADER_DASHBOARD') %></span>
+						<span><%- translate('HEADER_DASHBOARD') %></span>
 					</a>
 				</md-list-item>
 
-				<md-list-item id="vq-header-browse-btn">
-					<a style="text-decoration: none;" ng-show="shouldShowButton('browse')" href="/app" target="_self">
-						<span class="blue-grey-text text-darken-1" ng-show="browseButtonText('supply')"><%- translate('HEADER_SUPPLY_LISTINGS') %></span>
-						<span class="blue-grey-text text-darken-1" ng-show="browseButtonText('demand')"><%- translate('HEADER_DEMAND_LISTINGS') %></span>
+				<md-list-item id="vq-header-browse-btn" ng-show="shouldShowButton('browse')">
+					<a style="text-decoration: none;" href="/app" target="_self">
+						<span ng-show="browseButtonText('supply')"><%- translate('HEADER_SUPPLY_LISTINGS') %></span>
+						<span ng-show="browseButtonText('demand')"><%- translate('HEADER_DEMAND_LISTINGS') %></span>
 					</a>
 				</md-list-item>
-
-				<md-list-item id="vq-header-login-btn">
-					<a style="text-decoration: none;" href="/app/login" target="_self">
-						<span class="blue-grey-text text-darken-1"><%- translate('LOGIN') %></span>
-					</a>
-				</md-list-item>
-				
-				<md-list-item id="vq-header-signup-btn">
-					<a style="text-decoration: none;" href="/app/signup" target="_self">
-						<span class="blue-grey-text text-darken-1"><%- translate('SIGNUP') %></span>
-					</a>
-				</md-list-item>
-
-				<md-list-item id="vq-profile-btn" style="margin-right: 5px;">
-					<md-menu ng-cloak>
-						<img ng-click="$mdMenu.open($event)" style="cursor: pointer; width: 40px; height: 40px; border-radius: 50%;" ng-src="{{header.user.imageUrl || '<%- getConfig('USER_PROFILE_IMAGE_URL') %>' || '/images/avatar.png'}}" alt="{{header.user.profile.firstName}} {{header.user.profile.lastName}}">
-						<md-menu-content width="4">
-							<a style="text-decoration:none;" ng-href="/app/profile/{{header.user.id}}" target="_self">
-								<md-menu-item>
-									<md-button>
-										<%- translate('PROFILE') %>
-									</md-button>
-								</md-menu-item>
-							</a>
-							<a ng-if="user.userType===2" style="text-decoration:none;" ng-href="/app/user-verifications" target="_self">
-								<md-menu-item>
-									<md-button>
-										<%- translate('USER_VERIFICATIONS') %>
-									</md-button>
-								</md-menu-item>
-							</a>
-							<a ng-if="user.userType===2" style="text-decoration:none;" ng-href="/app/user-preferences" target="_self">
-								<md-menu-item>
-									<md-button>
-										<%- translate('USER_PREFERENCES') %>
-									</md-button>
-								</md-menu-item>
-							</a>
-							<a style="text-decoration:none;" ng-href="/app/account" target="_self">
-								<md-menu-item>
-									<md-button>
-										<%- translate('ACCOUNT_SETTINGS') %>
-									</md-button>
-								</md-menu-item>
-							</a>
-							<md-menu-item>
-								<md-button ng-click="header.logout()">
-									<%- translate('LOGOUT') %>
-								</md-button>
-							</md-menu-item>
-						</md-menu-content>
-					</md-menu>
-				</md-list-item>	
 
 				<hr />
+
+				<md-list-item id="vq-header-login-btn" ng-show="!shouldShowButton('profile')">
+					<a style="text-decoration: none;" href="/app/login" target="_self">
+						<span><%- translate('LOGIN') %></span>
+					</a>
+				</md-list-item>
+				
+				<md-list-item id="vq-header-signup-btn" ng-show="!shouldShowButton('profile')">
+					<a style="text-decoration: none;" href="/app/signup" target="_self">
+						<span><%- translate('SIGNUP') %></span>
+					</a>
+				</md-list-item>
+
+				<md-list-item ng-show="shouldShowButton('profile')">
+					<a style="text-decoration: none;" ng-href="/app/profile/{{header.user.id}}"  target="_self">
+						<span><%- translate('PROFILE') %></span>
+					</a>
+				</md-list-item>
+
+				<md-list-item ng-show="shouldShowButton('profile')">
+					<a style="text-decoration: none;" ng-href="/app/account" target="_self">
+						<span><%- translate('ACCOUNT_SETTINGS') %></span>
+					</a>
+				</md-list-item>
+
+				<md-list-item ng-show="shouldShowButton('profile')">
+					<a style="text-decoration: none;" href="#" ng-click="header.logout()" target="_self">
+						<span><%- translate('LOGOUT') %></span>
+					</a>
+				</md-list-item>
 
 			</md-list>
 		</md-content>
@@ -137,38 +116,38 @@
 					</li>
 				<% } %>
                 
-				<li id="vq-header-new-listing-btn">
-					<a style="text-decoration: none;" ng-show="shouldShowButton('new-listing')" href="/app/new-listing" target="_self">
+				<li id="vq-header-new-listing-btn" ng-show="shouldShowButton('new-listing')">
+					<a style="text-decoration: none;" href="/app/new-listing" target="_self">
 						<span class="blue-grey-text text-darken-1"><%- translate('HEADER_ADD_LISTING') %></span>
 					</a>
 				</li>
 
-				<li id="vq-header-dashboard-btn">
+				<li id="vq-header-dashboard-btn" ng-show="shouldShowButton('dashboard')">
 					<a style="text-decoration: none;" href="/app/dashboard" target="_self">
 						<span class="blue-grey-text text-darken-1"><%- translate('HEADER_DASHBOARD') %></span>
 					</a>
 				</li>
 
-				<li id="vq-header-browse-btn">
-					<a style="text-decoration: none;" ng-show="shouldShowButton('browse')" href="/app" target="_self">
+				<li id="vq-header-browse-btn" ng-show="shouldShowButton('browse')">
+					<a style="text-decoration: none;" href="/app" target="_self">
 						<span class="blue-grey-text text-darken-1" ng-show="browseButtonText('supply')"><%- translate('HEADER_SUPPLY_LISTINGS') %></span>
 						<span class="blue-grey-text text-darken-1" ng-show="browseButtonText('demand')"><%- translate('HEADER_DEMAND_LISTINGS') %></span>
 					</a>
 				</li>
 
-				<li id="vq-header-login-btn">
+				<li id="vq-header-login-btn" ng-show="shouldShowButton('login')">
 					<a style="text-decoration: none;" href="/app/login" target="_self">
 						<span class="blue-grey-text text-darken-1"><%- translate('LOGIN') %></span>
 					</a>
 				</li>
 				
-				<li id="vq-header-signup-btn">
+				<li id="vq-header-signup-btn" ng-show="shouldShowButton('register')">
 					<a style="text-decoration: none;" href="/app/signup" target="_self">
 						<span class="blue-grey-text text-darken-1"><%- translate('SIGNUP') %></span>
 					</a>
 				</li>
 
-				<li id="vq-profile-btn" style="margin-right: 5px;">
+				<li id="vq-profile-btn" style="margin-right: 5px;" ng-show="shouldShowButton('profile')">
 					<md-menu ng-cloak>
 						<img ng-click="$mdMenu.open($event)" style="cursor: pointer; width: 40px; height: 40px; border-radius: 50%;" ng-src="{{header.user.imageUrl || '<%- getConfig('USER_PROFILE_IMAGE_URL') %>' || '/images/avatar.png'}}" alt="{{header.user.profile.firstName}} {{header.user.profile.lastName}}">
 						<md-menu-content width="4">
