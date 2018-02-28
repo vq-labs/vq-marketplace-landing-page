@@ -1,53 +1,4 @@
 
-
-const makeVisible = id => {
-  document.getElementById(id).className =
-  document.getElementById(id).className.replace(/\bhidden\b/,'');
-};
-
-const makeInvisible = id => {
-  document.getElementById(id).className =
-  document.getElementById(id).className += ' hidden';
-};
-
-const toogleLoggedInMenuPoints = (shouldShow, userType) => {
-  const toogle = shouldShow ? makeVisible : makeInvisible;
-
-/*   if (shouldShow && userType === 1) {
-    toogle("vq-header-new-listing-btn");
-    toogle("vq-header-new-listing-xs-btn");
-  }
-
-  if (shouldShow && userType === 2) {
-    toogle("vq-header-browse-btn");
-    toogle("vq-header-browse-xs-btn");
-  } */
-  
-/*   if (!shouldShow) {
-    toogle("vq-header-new-listing-btn");
-    toogle("vq-header-new-listing-xs-btn");
-    toogle("vq-header-browse-btn");
-    toogle("vq-header-browse-xs-btn");
-  } */
-
-  toogle("vq-header-dashboard-btn");
-  toogle("vq-header-dashboard-xs-btn");
-  
-  
-  toogle("vq-header-logout-xs-btn");
-  toogle("vq-profile-btn");
-  toogle("vq-header-profile-xs-btn");
-};
-
-const toogleLoggedOutMenuPoints = (shouldShow) => {
-  const toogle = shouldShow ? makeVisible : makeInvisible;
-
-  toogle("vq-header-login-xs-btn");
-  toogle("vq-header-signup-xs-btn");
-  toogle("vq-header-login-btn");
-  toogle("vq-header-signup-btn");
-};
-
 const app = angular.module("vqApp", [
   'ngMaterial',
   "viciauth"
@@ -92,14 +43,8 @@ app.run((ViciAuth, API_URL) => {
 
     ViciAuth
     .me(user => {
-      toogleLoggedInMenuPoints(true, user.userType);
 
-      makeVisible("vq-body");
     }, err => {
-      toogleLoggedOutMenuPoints(true);
-      toogleLoggedInMenuPoints(false);
-
-      makeVisible("vq-body");
 
       ViciAuth.destroyUserCredentials();
     });
@@ -129,10 +74,6 @@ app.controller('headerCtrl', function($scope, ViciAuth, $mdMenu, $mdSidenav, $wi
       if (
         CONFIG &&
         (
-          getConfig('LISTING_ENABLE_PUBLIC_VIEW') === "1" &&
-          !isLoggedIn
-        ) ||
-        (
           isLoggedIn &&
           (
             userType === 0
@@ -155,10 +96,6 @@ app.controller('headerCtrl', function($scope, ViciAuth, $mdMenu, $mdSidenav, $wi
     if (buttonType === 'new-listing') {
       if (
         CONFIG &&
-        (
-          getConfig('LISTING_ENABLE_PUBLIC_VIEW') === "1" &&
-          !isLoggedIn
-        ) ||
         (
           isLoggedIn &&
           (
@@ -222,7 +159,28 @@ app.controller('headerCtrl', function($scope, ViciAuth, $mdMenu, $mdSidenav, $wi
 
       return false;
     }
+
+    if (buttonType === 'register') {
+      if (isLoggedIn) {
+        return false;
+      }
+      return true;
+    }
+
+    if (buttonType === 'login') {
+      if (isLoggedIn) {
+        return false;
+      }
+      return true;
+    }
+    if (buttonType === 'profile') {
+      if (isLoggedIn) {
+        return true;
+      }
+      return false;
+    }
   }
+
 
   $scope.browseButtonText = (type) => {
     const isLoggedIn = header.user ? true : false;
@@ -254,8 +212,6 @@ app.controller('headerCtrl', function($scope, ViciAuth, $mdMenu, $mdSidenav, $wi
   header.toggleLeft = () => $mdSidenav('left').toggle();
 
 	header.logout = () => {
-    toogleLoggedInMenuPoints(false);
-    toogleLoggedOutMenuPoints(true);
 
 	  header.user = null;
 	  
