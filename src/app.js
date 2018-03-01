@@ -53,140 +53,161 @@ app.run((ViciAuth, API_URL) => {
 app.controller('headerCtrl', function($scope, ViciAuth, $mdMenu, $mdSidenav, $window, $http, CONFIG) {
 	const header = this;
   var originatorEv;
+  $scope.isLoading = true;
 
   const getConfig = (fieldKey) => {
     return CONFIG[fieldKey];
   }
+
+  ViciAuth
+  .me(myProfile => {
+    header.user = myProfile;
+    $scope.isLoading = false;
+	}, err => {
+    $scope.isLoading = false;
+  });
+  
   
   $scope.shouldShowButton = (buttonType) => {
     const isLoggedIn = header.user ? true : false;
-    const userType = header.user ? Number(header.user.userType) : undefined;
+    const userType = header.user ? Number(header.user.userType) : -1;
 
-    if (buttonType === 'dashboard') {
-      if (isLoggedIn) {
-        return true;
-      }
-
-      return false;
-    }
+    if (CONFIG && !$scope.isLoading) {
+      if (buttonType === 'dashboard') {
+        if (isLoggedIn) {
+          return true;
+        }
   
-    if (buttonType === 'browse') {
-      if (
-        CONFIG &&
-        (
-          getConfig('LISTING_ENABLE_PUBLIC_VIEW') === "1" &&
-          !isLoggedIn
-        ) ||
-        (
-          isLoggedIn &&
-          (
-            userType === 0
-          ) ||
-          (
-            userType === 1 &&
-            getConfig('USER_TYPE_SUPPLY_LISTING_ENABLED') === "1"
-          ) ||
-          (
-            userType === 2 &&
-            getConfig('USER_TYPE_DEMAND_LISTING_ENABLED') === "1"
-          )
-        )
-      ) {
-        return true;
-      }
-      return false;
-    }
-  
-    if (buttonType === 'new-listing') {
-      if (
-        CONFIG &&
-        (
-          getConfig('LISTING_ENABLE_PUBLIC_VIEW') === "1" &&
-          !isLoggedIn
-        ) ||
-        (
-          isLoggedIn &&
-          (
-            userType === 0
-          ) ||
-          (
-            userType === 1 &&
-            getConfig('USER_TYPE_DEMAND_LISTING_ENABLED') === "1"
-          ) ||
-          (
-            userType === 2 &&
-            getConfig('USER_TYPE_SUPPLY_LISTING_ENABLED') === "1"
-          )
-        )
-      ) {
-        return true;
-      }
-      return false;
-    }
-
-    if (buttonType === 'listings') {
-      if (
-        CONFIG &&
-        isLoggedIn &&
-        (
-          userType === 0
-        ) ||
-        (
-          userType === 1 &&
-          getConfig('USER_TYPE_DEMAND_LISTING_ENABLED') === "1"
-        ) ||
-        (
-          userType === 2 &&
-          getConfig('USER_TYPE_SUPPLY_LISTING_ENABLED') === "1"
-        )
-      ) {
-        return true;
-      }
-
-      return false;
-    }
-
-    if (buttonType === 'requests') {
-      if (
-        CONFIG &&
-        isLoggedIn &&
-        (
-          userType === 0
-        ) ||
-        (
-          userType === 1 &&
-          getConfig('USER_TYPE_SUPPLY_LISTING_ENABLED') === "1"
-        ) ||
-        (
-          userType === 2 &&
-          getConfig('USER_TYPE_DEMAND_LISTING_ENABLED') === "1"
-        )
-      ) {
-        return true;
-      }
-
-      return false;
-    }
-
-    if (buttonType === 'register') {
-      if (isLoggedIn) {
         return false;
       }
-      return true;
-    }
-
-    if (buttonType === 'login') {
-      if (isLoggedIn) {
+    
+      if (buttonType === 'browse') {
+        if (
+          (
+            getConfig('LISTING_ENABLE_PUBLIC_VIEW') === "1" &&
+            !isLoggedIn
+          ) ||
+          (
+            isLoggedIn &&
+            userType !== -1 &&
+            (
+              (
+                userType === 0
+              ) ||
+              (
+                userType === 1 &&
+                getConfig('USER_TYPE_SUPPLY_LISTING_ENABLED') === "1"
+              ) ||
+              (
+                userType === 2 &&
+                getConfig('USER_TYPE_DEMAND_LISTING_ENABLED') === "1"
+              )
+            )
+          )
+        ) {
+          return true;
+        }
         return false;
       }
-      return true;
-    }
-    if (buttonType === 'profile') {
-      if (isLoggedIn) {
+    
+      if (buttonType === 'new-listing') {
+        if (
+          (
+            getConfig('LISTING_ENABLE_PUBLIC_VIEW') === "1" &&
+            !isLoggedIn
+          ) ||
+          (
+            isLoggedIn &&
+            userType !== -1 &&
+            (
+              (
+                userType === 0
+              ) ||
+              (
+                userType === 1 &&
+                getConfig('USER_TYPE_DEMAND_LISTING_ENABLED') === "1"
+              ) ||
+              (
+                userType === 2 &&
+                getConfig('USER_TYPE_SUPPLY_LISTING_ENABLED') === "1"
+              )
+            )
+          )
+        ) {
+          return true;
+        }
+        return false;
+      }
+  
+      if (buttonType === 'listings') {
+        if (
+          isLoggedIn &&
+          userType !== -1 &&
+          (
+            (
+              userType === 0
+            ) ||
+            (
+              userType === 1 &&
+              getConfig('USER_TYPE_DEMAND_LISTING_ENABLED') === "1"
+            ) ||
+            (
+              userType === 2 &&
+              getConfig('USER_TYPE_SUPPLY_LISTING_ENABLED') === "1"
+            )
+          )
+        ) {
+          return true;
+        }
+  
+        return false;
+      }
+  
+      if (buttonType === 'requests') {
+        if (
+          isLoggedIn &&
+          userType !== -1 &&
+          (
+            (
+              userType === 0
+            ) ||
+            (
+              userType === 1 &&
+              getConfig('USER_TYPE_SUPPLY_LISTING_ENABLED') === "1"
+            ) ||
+            (
+              userType === 2 &&
+              getConfig('USER_TYPE_DEMAND_LISTING_ENABLED') === "1"
+            )
+          )
+        ) {
+          return true;
+        }
+  
+        return false;
+      }
+  
+      if (buttonType === 'register') {
+        if (isLoggedIn) {
+          return false;
+        }
         return true;
       }
-      return false;
+  
+      if (buttonType === 'login') {
+        if (isLoggedIn) {
+          return false;
+        }
+        return true;
+      }
+      if (buttonType === 'profile') {
+        if (isLoggedIn) {
+          return true;
+        }
+        return false;
+      }
     }
+    return false;
   }
 
 
@@ -194,24 +215,26 @@ app.controller('headerCtrl', function($scope, ViciAuth, $mdMenu, $mdSidenav, $wi
     const isLoggedIn = header.user ? true : false;
     const userType = header.user ? Number(header.user.userType) : undefined;
     
-    if (isLoggedIn) {
-      if (userType === 0 && type === 'supply') {
+    if (CONFIG && !$scope.isLoading) {
+      if (isLoggedIn && userType !== -1) {
+        if (userType === 0 && type === 'supply') {
+          return true
+        }
+        if (userType === 1 && type === 'supply') {
+          return true
+        }
+        if (userType === 2 && type === 'demand') {
+          return true
+        }
+      }
+  
+      if (getConfig('LISTING_PUBLIC_VIEW_MODE') === 2 && type === 'supply') {
         return true
       }
-      if (userType === 1 && type === 'supply') {
+  
+      if (getConfig('LISTING_PUBLIC_VIEW_MODE') === 1 && type === 'demand') {
         return true
       }
-      if (userType === 2 && type === 'demand') {
-        return true
-      }
-    }
-
-    if (getConfig('LISTING_PUBLIC_VIEW_MODE') === 2 && type === 'supply') {
-      return true
-    }
-
-    if (getConfig('LISTING_PUBLIC_VIEW_MODE') === 1 && type === 'demand') {
-      return true
     }
 
     return false;
@@ -227,11 +250,6 @@ app.controller('headerCtrl', function($scope, ViciAuth, $mdMenu, $mdSidenav, $wi
     
     location.reload();
   };
-
-  ViciAuth
-  .me(myProfile => {
-		header.user = myProfile;
-	}, err => {});
 });
 
 app.controller('taskAutoCompleteCtrl', function($timeout, $http, $q, $log, CONFIG, CATEGORIES) {
