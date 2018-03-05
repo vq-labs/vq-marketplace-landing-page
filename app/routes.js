@@ -199,6 +199,7 @@ ResponseService.error500 = function(res){
 const allowedDomains = {
 	"rent.kitchen": "rentkitchen",
 	"clickforwork.hu": "click4work",
+	"www.clickforwork.hu": "click4work",
 	"talentwand.de": "talentwand",
 	"bitcoinswap.com": "bitcoinswap"
 };
