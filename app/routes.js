@@ -199,7 +199,6 @@ ResponseService.error500 = function(res){
 const allowedDomains = {
 	"rent.kitchen": "rentkitchen",
 	"clickforwork.hu": "click4work",
-	"www.clickforwork.hu": "click4work",
 	"talentwand.de": "talentwand",
 	"bitcoinswap.com": "bitcoinswap"
 };
@@ -233,10 +232,17 @@ const renderCustomPage = (req, res, template, data) => {
 }
 
 const render = (req, res, template, data) => {
-	let tenantId = process.env.TENANT_ID || req.subdomains[req.subdomains.length - 1];
-	if (!tenantId) {
-		tenantId = allowedDomains[req.hostname];
+	let domainTenant;
+	if (req.subdomains.length) {
+		if (req.subdomains[req.subdomains.length - 1] === "www") {
+			domainTenant = allowedDomains[req.hostname.replace("www.", "")];
+		} else {
+			domainTenant = req.subdomains[req.subdomains.length - 1];
+		}
+	} else {
+		domainTenant = allowedDomains[req.hostname];
 	}
+	let tenantId = process.env.TENANT_ID || domainTenant;
 
 	if (!tenantId) {
 		return res.status(404)
