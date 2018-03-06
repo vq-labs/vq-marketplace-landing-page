@@ -54,5 +54,10 @@
   "engines": {
     "node": "~8.3.0",
     "npm": "~5.6.0"
+  },
+  "git": {
+    "scripts": {
+      "pre-push": "npm run build"
+    }
   }
 }
