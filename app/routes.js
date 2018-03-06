@@ -196,11 +196,46 @@ const allowedDomains = {
 	"bitcoinswap.com": "bitcoinswap"
 };
 
-const render = (req, res, template, data) => {
-	let tenantId = process.env.TENANT_ID || req.subdomains[req.subdomains.length - 1];
-	if (!tenantId) {
-		tenantId = allowedDomains[req.hostname];
+const renderTaskerPage = (res, data) => {
+	return res.render('index-provider.ejs', data);
+}
+
+
+const renderCustomPage = (req, res, template, data) => {
+	const uncompiledPost = data.getPost(`${template.slug}`);
+
+	if (!uncompiledPost) {
+		return render(req, res, "st.error.404.index.ejs");
 	}
+
+	data.body = `
+		<section style="margin-top:100px; margin-bottom: 50px;">
+			${ejs.render(uncompiledPost, data)}
+		</section>`;
+
+	ejs.renderFile(__dirname + "/../views/layouts/material-layout.ejs", data, (err, result) => {
+		if (!err) {
+			res.end(result);
+
+			return;
+		}
+
+		res.end(err.toString());
+	});
+}
+
+const render = (req, res, template, data) => {
+	let domainTenant;
+	if (req.subdomains.length) {
+		if (req.subdomains[req.subdomains.length - 1] === "www") {
+			domainTenant = allowedDomains[req.hostname.replace("www.", "")];
+		} else {
+			domainTenant = req.subdomains[req.subdomains.length - 1];
+		}
+	} else {
+		domainTenant = allowedDomains[req.hostname];
+	}
+	let tenantId = process.env.TENANT_ID || domainTenant;
 
 	if (!tenantId) {
 		return res.status(404)
@@ -267,44 +302,74 @@ const render = (req, res, template, data) => {
 
 		data.originalUrl = req.originalUrl;
 
-		data.layout = data.layout || "layouts/material-layout.ejs";
 		data.lang = getLang();
-
-		const supplySlug = data.getConfig("LANDING_PAGE_HEADER_BUTTON_TEXT_FOR_SELLERS");
-
-		if (
-			template.slug === "taskers" ||
-			(
-				supplySlug && supplySlug === template.slug
-			)
-		) {
-			return res.render('index-provider.ejs', data);
-		}
+		data.layout = data.layout || "layouts/material-layout.ejs";
 
 		if (typeof template === "string") {
 			return res.render(template, data);
 		}
 
-		const uncompiledPost = data.getPost(`${template.slug}`);
+		const marketplaceLanguages = configs[1].LANGUAGES.split(',').concat(configs[1].DEFAULT_LANG);
 
-		if (!uncompiledPost) {
-			return render(req, res, "st.error.404.index.ejs");
-		}
+		// if slug is a language
+		if (
+			template.slug && marketplaceLanguages.indexOf(template.slug) !== -1
+		) {
+			//we set the language and translate function accordingly
+			data.lang = template.slug;
+			data.translate = i18n.getFactory(
+				tenantId,
+				template.slug
+			);
+			
+			//if there is a subslug like /en/taskers or /en/how-it-works
+			if (template.subSlug) {
 
-		data.body = `
-			<section style="margin-top:100px; margin-bottom: 50px;">
-				${ejs.render(uncompiledPost, data)}
-			</section>`;
+				const supplySlug = data.getConfig("LANDING_PAGE_HEADER_BUTTON_TEXT_FOR_SELLERS");
+				//if the subslug is either taskers or the user defined one from the database
+				if (
+					template.subSlug === "taskers" ||
+					(
+						supplySlug && supplySlug === template.subSlug
+					)
+				) {
+					//we render the tasker page
+					return renderTaskerPage(res, data);
+				}
 
-		ejs.renderFile(__dirname + "/../views/layouts/material-layout.ejs", data, (err, result) => {
-			if (!err) {
-				res.end(result);
-
-				return;
+				//else if the slug is not the tasker page and a custom page like /how-it-works
+				template.slug = template.subSlug;
+				return renderCustomPage(req, res, template, data);
 			}
 
-			res.end(err.toString());
-		});
+			//if there is no subSlug we render the root page in selected language
+			return res.render('index-client.ejs', data);
+		
+		//if there is a slug which is not a language (meaning that it is either a custom page or the tasker page)
+		} else if (template.slug && !marketplaceLanguages.indexOf(template.slug) !== -1) {
+
+			//if the slug is either taskers or the user defined one from the database
+			const supplySlug = data.getConfig("LANDING_PAGE_HEADER_BUTTON_TEXT_FOR_SELLERS");
+			if (
+				template.slug === "taskers" ||
+				(
+					supplySlug && supplySlug === template.slug
+				)
+			) {
+				//we render the tasker page
+				return renderTaskerPage(res, data);
+			}
+
+			//else we render the custom page
+
+			return renderCustomPage(req, res, template, data);
+		}
+
+		//if all else
+		if (typeof template === "string") {
+			return res.render(template, data);
+		}
+
 	}
 )};
 
@@ -330,10 +395,8 @@ module.exports = app => {
 		}, {}, next);
 	});
 
-	/**
-	 * Landing page for Buyers / Clients (userType: 1)
-	 */
-	app.get("/:lang([a-zA-Z]{2})?", (req, res) => render(req, res, "index-client.ejs"));
+	app.get("/", (req, res) => render(req, res, "index-client.ejs"));
+
 
 	/**
 	 * Landing page for Sellers / Taskers (userType: 2)

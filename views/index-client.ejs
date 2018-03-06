@@ -20,15 +20,17 @@
     }) %>
 <% } %>
 
-<% if (
+<!-- 01032018, Sercan: disabled by request of Ani, VM-152 -->
+<!-- <% if (
     getConfig("LANDING_PAGE_DEMAND_SECTION_CATEGORIES_ENABLED") === "1" &&
     getConfig("LANDING_PAGE_DEMAND_SECTION_HOW_IT_WORKS_ENABLED") === "1") { %>
 <hr />
-<% } %>
+<% } %> -->
 
-<% if (getConfig("LANDING_PAGE_SECTION_CATEGORIES_ENABLED") === "1") { %>
+<!-- 01032018, Sercan: disabled by request of Ani, VM-152 -->
+<!-- <% if (getConfig("LANDING_PAGE_SECTION_CATEGORIES_ENABLED") === "1") { %>
     <%- include('partials/st.categories.ejs', { userType: 1 }) %>
-<% } %>
+<% } %> -->
 
 
 <%- getPost("LANDING_PAGE") %>
