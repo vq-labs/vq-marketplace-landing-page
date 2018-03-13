@@ -1,11 +1,7 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const args = require('yargs').argv;
-
-const CONFIG = require("./app/config.js");
-const port = args.PORT || CONFIG.PORT;
- 
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const expressLayouts = require('express-ejs-layouts');
@@ -37,20 +33,17 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-
-app.use("/libs/materialize-css/dist/fonts/", express.static(__dirname + '/node_modules/materialize-css/fonts/'));  
+app.use("/libs/materialize-css/dist/fonts/", express.static(__dirname + '/node_modules/materialize-css/fonts/'));
 app.use('/libs/', express.static(__dirname + '/node_modules'));
 app.use('/', express.static(__dirname + '/public'));
-
 
 require('./app/routes.js')(app);
 
 var httpServer = http.createServer(app);
 
-httpServer.listen(port, serverListener);
-
-function serverListener () {
-  var host = httpServer.address().address;
-	var port = httpServer.address().port;
-	console.log('%s (%s) listening at port %s',CONFIG.APP_NAME,CONFIG.APP_VERSION,port);
-}
+httpServer.listen(process.env.PORT, () => {
+  console.log('%s (%s) listening at port %s',
+    process.env.APP_NAME,
+    process.env.APP_VERSION,
+    process.env.PORT);
+});
