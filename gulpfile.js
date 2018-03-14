@@ -1,15 +1,39 @@
 'use strict';
+require('dotenv').config();
+
 const ngAnnotate = require('gulp-ng-annotate');
 const replace = require('gulp-replace-task');
-const args = require('yargs').argv;
 const gulp = require('gulp');
 const spawn = require('child_process').spawn;
+const args = require('yargs').argv;
 const del = require('del');
-const path = require('path');
 const babel = require('gulp-babel');
 const uglify = require('gulp-uglify');
 const minify = require('gulp-minify');
+const runSequence = require('run-sequence');
 const targetPath = 'public/stApp';
+
+const env = args.env || process.env.ENV;
+
+
+gulp.task('watch', () => gulp.watch('./src/**/**',  [ 'build' ]));
+
+gulp.task('run', function(cb) {
+  if (env.toLowerCase() === 'production') {
+        runSequence(
+        'clean',
+        'build',
+        cb
+    );
+  } else {
+        runSequence(
+        'clean',
+        'build',
+        'watch',
+        cb
+    );
+  }
+});
 
 gulp.task('clean', () => del([ `${targetPath}/**` ]));
 
@@ -29,9 +53,9 @@ gulp.task('deploy', [ "build" ], () => {
   });
 });
 
-gulp.task('build', [ "clean" ], () => {
-  const env = args.env || 'production';
-  const VQ_API_URL = args.VQ_API_URL || process.env.VQ_API_URL;
+gulp.task('build', () => {
+  
+  const VQ_API_URL = args.VQ_API_URL || process.env.API_URL;
 
   if (!VQ_API_URL) {
     throw new Error('Provide VQ_API_URL');
