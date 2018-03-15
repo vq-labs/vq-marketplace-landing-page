@@ -1,6 +1,7 @@
 node_modules/
 deployments/
 
+.env
 .DS_Store
 public/stApp/
 public/.DS_Store

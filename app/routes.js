@@ -1,11 +1,10 @@
-const fs = require('fs');
 const async = require("async");
-const CONFIG = require("./config.js");
 const i18n = require("./services/i18n.js");
-const path = require('path');
 const ejs = require('ejs');
 
-const vqSDK = require("./vq-sdk/index.js")(CONFIG.VQ_API_URL, CONFIG.VQ_TENANT_API_URL);
+
+const vqSDK = require("./vq-sdk/index.js");
+const routeProvider = vqSDK.routeProvider();
 
 const LAYOUT_MATERIAL = "layouts/material-layout.ejs";
 
@@ -17,7 +16,7 @@ const categoryProvider = (tenantId, forceRequest, cb) => {
 	tenantData[tenantId] = tenantData[tenantId] || {};
 
 	if (!tenantData[tenantId].categories || forceRequest) {
-		vqSDK.getCategories(tenantId, (err, rCategories) => {
+		routeProvider.getCategories(tenantId, (err, rCategories) => {
 			if (err) {
 				return cb(err);
 			}
@@ -37,7 +36,7 @@ const appConfigProvider = (tenantId, forceRequest, cb) => {
 	tenantData[tenantId] = tenantData[tenantId] || {};
 
 	if (!tenantData[tenantId].appConfig || forceRequest) {
-		return vqSDK.getAppConfig(tenantId, (err, rAppConfig) => {
+		return routeProvider.getAppConfig(tenantId, (err, rAppConfig) => {
 			if (err) {
 				return cb(err);
 			}
@@ -48,15 +47,12 @@ const appConfigProvider = (tenantId, forceRequest, cb) => {
 				tenantData[tenantId].appConfig[label.fieldKey] = label.fieldValue;
 			});
 
-			const defaultLang = (tenantData[tenantId].appConfig["DEFAULT_LANG"] || 'en');
-
-			appLabelProvider(tenantId, forceRequest, defaultLang, () => {});
-
-			const languagesString = tenantData[tenantId].appConfig["LANGUAGES"];
-
+			const languagesString = tenantData[tenantId].appConfig["LANGUAGES"] || 'en';
 			if (languagesString) {
-				const langArr = (tenantData[tenantId].appConfig["LANGUAGES"] || '').split(",");
-				
+				const langArr = languagesString.split(",");
+				if (langArr.indexOf(tenantData[tenantId].appConfig["DEFAULT_LANG"]) === -1) {
+					langArr.unshift(tenantData[tenantId].appConfig["DEFAULT_LANG"]);
+				}
 				langArr.forEach(LANG => appLabelProvider(tenantId,  forceRequest, LANG, () => {}));
 			}
 			
@@ -73,7 +69,7 @@ const postProvider = (tenantId, forceRequest, cb) => {
 	tenantData[tenantId] = tenantData[tenantId] || {};
 
 	if (!tenantData[tenantId].posts || forceRequest) {
-		return vqSDK.getPosts(tenantId, (err, rPosts) => {
+		return routeProvider.getPosts(tenantId, (err, rPosts) => {
 			if (err) {
 				return cb(err);
 			}
@@ -100,7 +96,7 @@ const taskProvider = (tenantId, originalUrl, forceRequest, cb) => {
 		  let taskRef = {};
 
       if (forceRequest) {
-        return vqSDK.getTask(tenantId, taskId, (err, rTask) => {
+        return routeProvider.getTask(tenantId, taskId, (err, rTask) => {
           if (err) {
             return cb(err);
           }
@@ -122,7 +118,7 @@ const appLabelProvider = (tenantId, forceRequest, lang, cb) => {
 	tenantData[tenantId] = tenantData[tenantId] || {};
 	tenantData[tenantId].appLabels = tenantData[tenantId].appLabels || {};
 	if (!tenantData[tenantId].appLabels[lang] || forceRequest) {
-		return vqSDK.getAppLabels(tenantId, lang, (err, rLabels) => {
+		return routeProvider.getAppLabels(tenantId, lang, (err, rLabels) => {
 			if (err) {
 				return cb(err);
 			}
@@ -144,7 +140,7 @@ const appLabelProvider = (tenantId, forceRequest, lang, cb) => {
 
 // refresh categories and app meta every 30 seconds
 const getConfigs = () => {
-	vqSDK
+	routeProvider
 	.getTenants((err, tenants) => {
 		if (err) {
 			return console.error(err);
@@ -242,7 +238,7 @@ const render = (req, res, template, data) => {
 	} else {
 		domainTenant = allowedDomains[req.hostname];
 	}
-	let tenantId = process.env.TENANT_ID || domainTenant;
+	let tenantId = domainTenant || process.env.TENANT_ID;
 
 	if (!tenantId) {
 		return res.status(404)
@@ -263,10 +259,10 @@ const render = (req, res, template, data) => {
 		
 		data = data || {};
 		data.TENANT_ID = tenantId;
-		data.VQ_API_URL = CONFIG.VQ_API_URL.replace('?tenantId?', tenantId);
+		data.VQ_API_URL = process.env.API_URL.replace('?tenantId?', tenantId);
 		data.TENANT_STRIPE_PUBLIC_KEY = tenantData[tenantId].stripePublicKey;
 
-		if (CONFIG.PRODUCTION) {
+		if (process.env.ENV.toLowerCase() === 'production') {
 			data.VQ_WEB_APP_CSS_URL = 'https://s3.eu-central-1.amazonaws.com/vq-marketplace/static/css/main.css';
 			data.VQ_WEB_APP_JS_URL = 'https://s3.eu-central-1.amazonaws.com/vq-marketplace/static/js/main.js';
 		} else {
@@ -289,7 +285,7 @@ const render = (req, res, template, data) => {
 		}
 
 		const getLang = () => {
-			const defaultLang = data.getConfig('DEFAULT_LANG') || CONFIG.DEFAULT_LANGUAGE;
+			const defaultLang = data.getConfig('DEFAULT_LANG') || 'en';
 
 			if (req.params.lang) {
 				return configs[1].LANGUAGES.indexOf(req.params.lang) !== -1 ? req.params.lang : defaultLang;
