@@ -14,7 +14,6 @@ const setLabel = (tenantId, lang, fieldKey, fieldValue) => {
 };
 
 const getFactory = (tenantId, lang) => {
-
     try {
         return fieldKey => dictionary[tenantId][lang][fieldKey];
     } catch (err) {

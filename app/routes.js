@@ -50,6 +50,9 @@ const appConfigProvider = (tenantId, forceRequest, cb) => {
 			const languagesString = tenantData[tenantId].appConfig["LANGUAGES"] || 'en';
 			if (languagesString) {
 				const langArr = languagesString.split(",");
+				if (langArr.indexOf(tenantData[tenantId].appConfig["DEFAULT_LANG"]) === -1) {
+					langArr.unshift(tenantData[tenantId].appConfig["DEFAULT_LANG"]);
+				}
 				langArr.forEach(LANG => appLabelProvider(tenantId,  forceRequest, LANG, () => {}));
 			}
 			
