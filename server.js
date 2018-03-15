@@ -42,8 +42,5 @@ require('./app/routes.js')(app);
 var httpServer = http.createServer(app);
 
 httpServer.listen(process.env.PORT, () => {
-  console.log('%s (%s) listening at port %s',
-    process.env.APP_NAME,
-    process.env.APP_VERSION,
-    process.env.PORT);
+  console.log(`VQ-Marketplace Landing Page listening at port ${process.env.PORT}.`);
 });

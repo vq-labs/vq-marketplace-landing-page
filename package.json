@@ -43,9 +43,9 @@
     "yargs": "^11.0.0"
   },
   "scripts": {
-    "start:taskrabbit": "node ./node_modules/gulp/bin/gulp.js build --VQ_API_URL=https://taskrabbit.vqmarketplace.com/api node server.js",
-    "start:rentkitchen": "node ./node_modules/gulp/bin/gulp.js build --VQ_API_URL=https://rentkitchen.vqmarketplace.com/api node server.js",
-    "start:local-tenant": "node ./node_modules/gulp/bin/gulp.js build --VQ_API_URL=http://localhost:8080/api && node server.js",
+    "start:taskbee": "node ./node_modules/gulp/bin/gulp.js build --API_URL=https://taskbee.vqmarketplace.com/api node server.js",
+    "start:airhome": "node ./node_modules/gulp/bin/gulp.js build --API_URL=https://airhome.vqmarketplace.com/api node server.js",
+    "start:local-tenant": "node ./node_modules/gulp/bin/gulp.js build --API_URL=http://localhost:8080/api && node server.js",
     "start": "node ./node_modules/gulp/bin/gulp.js build && node server.js",
     "build": "node ./node_modules/gulp/bin/gulp.js build"
   },

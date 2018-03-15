@@ -235,7 +235,7 @@ const render = (req, res, template, data) => {
 	} else {
 		domainTenant = allowedDomains[req.hostname];
 	}
-	let tenantId = process.env.TENANT_ID || domainTenant;
+	let tenantId = domainTenant || process.env.TENANT_ID;
 
 	if (!tenantId) {
 		return res.status(404)

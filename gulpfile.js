@@ -55,7 +55,7 @@ gulp.task('deploy', [ "build" ], () => {
 
 gulp.task('build', () => {
   
-  const VQ_API_URL = args.VQ_API_URL || process.env.API_URL;
+  const VQ_API_URL = args.API_URL || process.env.API_URL;
 
   if (!VQ_API_URL) {
     throw new Error('Provide VQ_API_URL');
