@@ -1,4 +1,4 @@
-<footer>
+<footer ng-controller="footerCtrl as footer">
     <div class="card" style="background-color: <%- getConfig('COLOR_PRIMARY') %>; margin: 0px !important;">
         <div class="row st-menu-line" style="padding-left:50px; margin-bottom: 0px !important;">
             <div class="card-action">
@@ -9,7 +9,7 @@
                             <li>
                                 <a style="color: white;" href="/"><%- translate('HEADER_BUTTON_FOR_BUYERS') %></a>
                             </li>
-                            <li>
+                            <l>
                                 <a style="color: white;" href="/<%-getConfig('LANDING_PAGE_HEADER_BUTTON_TEXT_FOR_SELLERS') || 'taskers' %>"><%- translate('HEADER_BUTTON_FOR_SELLERS') %></a>
                             </li>
                             <li>
@@ -117,7 +117,7 @@
                                 };
                         %>
                         <ul style="margin-top: 15px;">
-                            <li>
+                            <li ng-click="footer.setLang('<%-getConfig('DEFAULT_LANG')%>')">
                                 <a style="color: white;" href="/<%-getConfig('DEFAULT_LANG')%><%- originalUrl.split('/').filter(_ => _.length !== 2).join('/') %>">
                                     <strong><%- LANG_LABELS[(getConfig('DEFAULT_LANG') || 'en').toLowerCase()] %></strong>
                                 </a>
@@ -127,7 +127,7 @@
                                 .split(',')
                                 .forEach(LANG => {
                             %>
-                                <li>
+                                <li ng-click="footer.setLang('<%- LANG %>')">
                                     <a style="color: white;" href="/<%- LANG %><%- originalUrl.split('/').filter(_ => _.length !== 2).join('/') %>">
                                         <strong><%- LANG_LABELS[(LANG || 'en').toLowerCase()] %></strong>
                                     </a>

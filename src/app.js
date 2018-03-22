@@ -331,3 +331,14 @@ app.controller('taskAutoCompleteCtrl', function($timeout, $http, $q, $log, CONFI
 
     }
 });
+
+app.controller('footerCtrl', function() {
+  var self = this;
+
+  self.setLang = setLang;
+
+  function setLang(lang) {
+    localStorage.setItem("ST_LANG", lang);
+  }
+
+});
